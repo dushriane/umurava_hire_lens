@@ -62,4 +62,15 @@ export class ApplicantController {
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
+
+  /**
+   * POST /applicants/upload
+   * Handles physical file uploads (PDF resumes or CSV lists)
+   */
+
+    public static async uploadApplicantFile(req: Request, res:Response): Promise<void>{
+        
+    }
 }
+
+
