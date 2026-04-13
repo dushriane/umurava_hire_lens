@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "dev": "ts-node src/app.ts",
+    "start": "node dist/app.js",
+    "build": "tsc"
+  },
   "dependencies": {
     "dotenv": "^17.4.1",
     "express": "^5.2.1",

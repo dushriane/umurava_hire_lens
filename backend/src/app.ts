@@ -1,4 +1,4 @@
-import express, {Request, Response, NextFunction} from  'express';
+import express, {Request, Response, NextFunction} from 'express';
 import dotenv from 'dotenv'
 import { connectDB } from './config/db';
 import jobRoutes from './modules/job/job.routes';
@@ -22,11 +22,6 @@ app.get("/health", (req:Request, res: Response) => {
     res.status(200).json({status: "ok", message: "Umurava Hire Lens API is running"});
 });
 
-//start the server
-app.listen(PORT, () => {
-    console.log(`Server is running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-});
-
 //API Routes
 app.use("/api/v1/jobs", jobRoutes);
 app.use("/api/v1/applicants", applicantRoutes);
@@ -40,3 +35,7 @@ app.use((err: any, req:Request, res:Response, next:NextFunction) => {
     });
 });
 
+//start the server
+app.listen(PORT, () => {
+    console.log(`Server is running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+});
