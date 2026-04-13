@@ -8,7 +8,7 @@ export interface ICandidateResult {
     strengths: string[];
     gaps: string[],
     recommendation: string;
-    confidence: string;
+    confidence: number; //number or string? to think about
 }
 export interface IResult extends Document{
     jobId: mongoose.Types.ObjectId;
@@ -42,9 +42,9 @@ const ResultSchema: Schema = new Schema(
                 strengths:[{
                     type: String,
                 }],
-                gaps:{
+                gaps:[{
                     type: String,
-                },
+                }],
                 recommendation:{
                     type: String,
                 },
