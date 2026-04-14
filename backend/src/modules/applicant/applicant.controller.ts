@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { ApplicantService, IIncomingApplicant } from "./applicant.service";
+import { parsePDF, parseCSV } from "../../utils/parser";
 
 export class ApplicantController {
   /**
@@ -69,7 +70,67 @@ export class ApplicantController {
    */
 
     public static async uploadApplicantFile(req: Request, res:Response): Promise<void>{
-        
+        try{
+            if(!(req as any).file){
+                res.status(400).json({error: "No file uploaded. Please upload a PDF or CSV file."});
+                return;
+            }
+            const {jobId} = req.body;
+            if(!jobId){
+                res.status(400).json({error:"jobId is required when uploading a file"});
+                return;
+            }
+
+            const file = (req as any).file
+            const fileExtension = file.originalname.split('.').pop()?.toLowerCase();
+
+            // handle pdf upload
+            if (fileExtension === "pdf"){
+                const parsedText = await parsePDF(file.buffer);
+
+                const data: IIncomingApplicant={
+                    jobId,
+                    source: "pdf",
+                    name: req.body.name || "Unknown from PDF",
+                    email: req.body.email,
+                    skills: [],
+                    parsedText,
+                };
+
+                const {applicant, duplicate} = await ApplicantService.createApplicant(data);
+                res.status(201).json({message: duplicate ? "Merged": "Created", applicant});
+                return;
+            }
+
+            //handle csv upload
+                if (fileExtension === "csv") {
+                const rows = await parseCSV(file.buffer);
+                const createdApplicants = [];
+
+                for (const row of rows) {
+                    const data: IIncomingApplicant = {
+                    jobId,
+                    source: "csv",
+                    name: row.name || row.Name || "Unknown from CSV",
+                    email: row.email || row.Email,
+                    phone: row.phone || row.Phone,
+                    skills: row.skills ? String(row.skills).split(",") : [],
+                    rawProfile: row
+                    };
+
+                    const { applicant } = await ApplicantService.createApplicant(data);
+                    createdApplicants.push(applicant);
+                }
+
+                res.status(201).json({ message: `Processed ${createdApplicants.length} rows`, applicants: createdApplicants });
+                return;
+                }
+
+                res.status(400).json({ error: "Unsupported file type." });
+        }catch(err){
+            console.error("Error processing file upload:", err);
+            res.status(500).json({ error: "Internal Server Error during file upload." });
+        }
     }
 }
 
