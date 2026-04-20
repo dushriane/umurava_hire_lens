@@ -28,6 +28,17 @@ export class ApplicantController {
     }
   }
 
+
+  public static async getAllApplicants(req: Request, res: Response): Promise<void> {
+    try {
+      const applicants = await ApplicantService.getAllApplicants();
+      res.status(200).json(applicants);
+    } catch (error) {
+      console.error("Error fetching all applicants:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+
   /**
    * GET /applicants/:jobId
    * Returns all applicants for a specific job

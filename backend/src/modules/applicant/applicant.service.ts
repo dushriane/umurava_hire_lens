@@ -167,4 +167,8 @@ export class ApplicantService {
   public static async getApplicantById(id: string): Promise<IApplicant | null> {
     return await Applicant.findById(id);
   }
+
+  public static async getAllApplicants(): Promise<IApplicant[]> {
+    return await Applicant.find().exec();
+  }
 }

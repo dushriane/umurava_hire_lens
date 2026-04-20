@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import { connectDB } from './config/db';
 import jobRoutes from './modules/job/job.routes';
 import applicantRoutes from './modules/applicant/applicant.routes';
+import screeningRoutes from "./modules/screening/screening.routes";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -25,6 +26,7 @@ app.get("/health", (req:Request, res: Response) => {
 //API Routes
 app.use("/api/v1/jobs", jobRoutes);
 app.use("/api/v1/applicants", applicantRoutes);
+app.use("/api/v1/screening", screeningRoutes);
 
 //Error Handling
 app.use((err: any, req:Request, res:Response, next:NextFunction) => {
