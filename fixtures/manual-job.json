@@ -1,0 +1,9 @@
+{
+  "_id": "job_manual_001",
+  "title": "Senior Backend Engineer",
+  "requiredSkills": ["Node.js", "PostgreSQL", "REST APIs", "Docker"],
+  "niceToHave": ["Kubernetes", "Redis", "AWS"],
+  "minExperienceYears": 4,
+  "educationLevel": "Bachelor's in CS or equivalent experience",
+  "shortlistSize": 5
+}

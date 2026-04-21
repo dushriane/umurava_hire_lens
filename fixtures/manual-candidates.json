@@ -1,0 +1,29 @@
+[
+  {
+    "_id": "cand_manual_01",
+    "name": "Alex Okonkwo",
+    "skills": ["Node.js", "TypeScript", "PostgreSQL", "Docker", "REST APIs", "Jest"],
+    "experienceYears": 6,
+    "education": "BSc Computer Science",
+    "projects": ["Payments microservice migration", "Auth platform"],
+    "certifications": ["AWS Solutions Architect – Associate"]
+  },
+  {
+    "_id": "cand_manual_02",
+    "name": "Sam Rivera",
+    "skills": ["Python", "Django", "MySQL", "GraphQL"],
+    "experienceYears": 3,
+    "education": "Bootcamp + self-taught",
+    "projects": ["E-commerce API"],
+    "certifications": []
+  },
+  {
+    "_id": "cand_manual_03",
+    "name": "Jordan Lee",
+    "skills": ["Node.js", "PostgreSQL", "Docker", "Kubernetes", "Redis", "gRPC"],
+    "experienceYears": 8,
+    "education": "MEng Software Engineering",
+    "projects": ["High-traffic booking engine", "Event-driven inventory"],
+    "certifications": ["CKAD"]
+  }
+]

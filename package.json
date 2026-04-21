@@ -1,0 +1,29 @@
+{
+  "name": "umurava_hire_lens",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "screen": "tsx src/screen-cli.ts",
+    "screen:demo": "tsx src/screen-cli.ts --demo",
+    "screen:manual": "tsx src/screen-cli.ts --manual",
+    "screen:one": "tsx src/screen-cli.ts --one fixtures/one-candidate.json",
+    "check-models": "tsx src/check-models.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "csv-parse": "^6.2.1",
+    "dotenv": "^17.4.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "tsx": "^4.21.0"
+  }
+}

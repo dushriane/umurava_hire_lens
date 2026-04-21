@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HireLens AI — Candidate Shortlist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #22d3ee;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(34, 211, 238, 0.1) 0px, transparent 50%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #818cf8 0%, #22d3ee 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            display: inline-block;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .btn-upload {
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-upload:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .job-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            border-radius: 24px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .job-info h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            background: rgba(99, 102, 241, 0.1);
+            color: #a5b4fc;
+            padding: 6px 16px;
+            border-radius: 99px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .candidate-grid {
+            display: grid;
+            gap: 30px;
+        }
+
+        .candidate-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 35px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .candidate-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .rank-badge {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 4rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.03);
+            pointer-events: none;
+            line-height: 1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+        }
+
+        .candidate-name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .score-box {
+            text-align: right;
+            background: rgba(34, 211, 238, 0.05);
+            padding: 10px 15px;
+            border-radius: 15px;
+            border: 1px solid rgba(34, 211, 238, 0.1);
+        }
+
+        .score-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 4px;
+        }
+
+        .recommendation {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 4px 12px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .rec-hire { 
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success); 
+        }
+        .rec-interview { 
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning); 
+        }
+
+        .explanation {
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 25px;
+            font-style: italic;
+            color: var(--text-main);
+            font-size: 1.05rem;
+        }
+
+        .tags-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .tag-group-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: block;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag {
+            font-size: 0.85rem;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .tag-strength {
+            background: rgba(16, 185, 129, 0.05);
+            color: #6ee7b7;
+            border: 1px solid rgba(16, 185, 129, 0.15);
+        }
+
+        .tag-gap {
+            background: rgba(244, 63, 94, 0.05);
+            color: #fda4af;
+            border: 1px solid rgba(244, 63, 94, 0.15);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 80px;
+            font-size: 1.3rem;
+            color: var(--text-muted);
+        }
+
+        .welcome-msg {
+            text-align: center;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 24px;
+            border: 2px dashed var(--glass-border);
+        }
+
+        @media (max-width: 768px) {
+            .tags-container { grid-template-columns: 1fr; }
+            .job-card { flex-direction: column; text-align: center; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">HireLens AI</div>
+            <p class="subtitle">Premium Candidate Intelligence Engine</p>
+        </header>
+
+        <div class="controls">
+            <label for="fileInput" class="btn-upload">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                Upload results.json
+            </label>
+            <input type="file" id="fileInput" accept=".json">
+        </div>
+
+        <div class="job-card" id="jobCard">
+            <div class="job-info">
+                <h2>Backend Developer</h2>
+                <div class="badge">Python · Machine Learning · SQL</div>
+            </div>
+            <div class="score-box">
+                <div class="score-label">Candidates Scanned</div>
+                <div class="score-value" id="statsCount">0</div>
+            </div>
+        </div>
+
+        <div id="results" class="candidate-grid">
+            <div class="welcome-msg">
+                <h3>Welcome to HireLens AI</h3>
+                <p style="margin-top: 10px; color: var(--text-muted);">Please upload the <b>results.json</b> file generated by the screening script to begin.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const resultsContainer = document.getElementById('results');
+        const statsCount = document.getElementById('statsCount');
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const data = JSON.parse(event.target.result);
+                    renderResults(data);
+                    statsCount.innerText = data.length;
+                    
+                    // Visual feedback
+                    const btn = document.querySelector('.btn-upload');
+                    btn.style.background = 'var(--success)';
+                    btn.innerHTML = '✓ Results Loaded';
+                    setTimeout(() => {
+                        btn.style.background = 'var(--primary)';
+                        btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Update Results';
+                    }, 2000);
+
+                } catch (err) {
+                    alert('Invalid JSON file format.');
+                    console.error(err);
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        function renderResults(candidates) {
+            resultsContainer.innerHTML = '';
+
+            candidates.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'candidate-card';
+                
+                const recClass = c.recommendation.toLowerCase().includes('hire') ? 'rec-hire' : 'rec-interview';
+
+                card.innerHTML = `
+                    <div class="rank-badge">${c.rank}</div>
+                    <div class="card-header">
+                        <div>
+                            <div class="candidate-name">${c.candidateName}</div>
+                            <div class="recommendation ${recClass}">${c.recommendation}</div>
+                        </div>
+                        <div class="score-box">
+                            <div class="score-value">${c.score}</div>
+                            <div class="score-label">AI Match Score</div>
+                        </div>
+                    </div>
+                    <p class="explanation">${c.explanation}</p>
+                    <div class="tags-container">
+                        <div class="tag-group">
+                            <span class="tag-group-label">Key Strengths</span>
+                            <div class="tags">
+                                ${c.strengths.map(s => `<span class="tag tag-strength">${s}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="tag-group">
+                            <span class="tag-group-label">Identified Gaps</span>
+                            <div class="tags">
+                                ${c.gaps.map(g => `<span class="tag tag-gap">${g}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                resultsContainer.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>

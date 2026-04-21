@@ -1,0 +1,9 @@
+{
+  "_id": "cand_quick_test",
+  "name": "Quick Test Candidate",
+  "skills": ["Node.js", "PostgreSQL", "Docker"],
+  "experienceYears": 5,
+  "education": "BSc Information Technology",
+  "projects": ["Internal HR portal APIs"],
+  "certifications": []
+}
