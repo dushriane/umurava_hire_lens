@@ -1,4 +1,5 @@
 import express, {Request, Response, NextFunction} from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv'
 import { connectDB } from './config/db';
 import jobRoutes from './modules/job/job.routes';
@@ -17,6 +18,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(cors());
 
 //Health Check Route
 app.get("/health", (req:Request, res: Response) => {

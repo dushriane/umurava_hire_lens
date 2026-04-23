@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "screen": "tsx src/screen-cli.ts",
-    "screen:demo": "tsx src/screen-cli.ts --demo",
-    "screen:manual": "tsx src/screen-cli.ts --manual",
-    "screen:one": "tsx src/screen-cli.ts --one fixtures/one-candidate.json",
-    "check-models": "tsx src/check-models.ts"
+    "screen": "tsx backend/tools/screen-cli.ts",
+    "screen:demo": "tsx backend/tools/screen-cli.ts --demo",
+    "screen:manual": "tsx backend/tools/screen-cli.ts --manual",
+    "screen:one": "tsx backend/tools/screen-cli.ts --one fixtures/one-candidate.json",
+    "check-models": "tsx backend/tools/check-models.ts"
   },
   "keywords": [],
   "author": "",

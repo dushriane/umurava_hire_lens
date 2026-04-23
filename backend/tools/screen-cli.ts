@@ -1,10 +1,10 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as dotenv from "dotenv";
-import { screenCandidates } from "./ai/screenCandidates";
-import { testJob, testCandidates } from "./ai/testData";
-import { parseJobJson, parseCandidatesJson } from "./ai/screeningInput";
-import { CandidateProfile, ScreeningResult } from "./ai/types";
+import { screenCandidates } from "../src/modules/screening/screenCandidates";
+import { testJob, testCandidates } from "../src/modules/screening/testData";
+import { parseJobJson, parseCandidatesJson } from "../src/modules/screening/screeningInput";
+import { CandidateProfile, ScreeningResult } from "../src/modules/screening/types";
 
 dotenv.config();
 
@@ -86,7 +86,7 @@ async function main(): Promise<void> {
   }
 
   let job = testJob;
-  let candidates: CandidateProfile[] = testCandidates;
+  let candidates: CandidateProfile[] = testCandidates as CandidateProfile[];
 
   if (args.manual) {
     job = parseJobJson(readJsonFile(path.join("fixtures", "manual-job.json")));

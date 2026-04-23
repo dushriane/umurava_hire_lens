@@ -1,4 +1,3 @@
-
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -8,18 +7,12 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 async function listModels() {
   try {
     console.log("🔍 Checking available Gemini models for your API key...");
-    const models = await genAI.getGenerativeModel({ model: "gemini-pro" }); // Using a default to access the client
-    
-    // There isn't a direct listModels in the standard 'model' object easily, 
-    // but we can try common ones to see what sticks, 
-    // or use the rest fetch if we wanted to be thorough.
-    
     const commonModels = [
       "gemini-1.5-flash",
       "gemini-1.5-flash-latest",
       "gemini-1.5-pro",
       "gemini-2.0-flash-exp",
-      "gemini-pro"
+      "gemini-pro",
     ];
 
     for (const modelName of commonModels) {
