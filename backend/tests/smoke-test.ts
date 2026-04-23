@@ -1,5 +1,11 @@
 import { screenCandidates } from "../src/modules/screening/screenCandidates";
-import { testJob } from "../src/modules/screening/testData";
+
+const testJob = {
+  _id: "job_test_1",
+  title: "Test Job",
+  requiredSkills: ["Node.js"],
+  shortlistSize: 5,
+} as any;
 
 async function run() {
   console.log("Running smoke test for screenCandidates with mock model...");

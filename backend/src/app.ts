@@ -16,13 +16,20 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
+import authRoutes from './modules/auth/auth.routes';
+import { verifyJwt } from './middleware/authJwt';
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors());
+    app.use('/api/v1/auth', authRoutes);
 
 //Health Check Route
 app.get("/health", (req:Request, res: Response) => {
     res.status(200).json({status: "ok", message: "Umurava Hire Lens API is running"});
+});
+
+app.get('/api/v1/profile', verifyJwt, (req, res) => {
+    res.json({ user: (req as any).user });
 });
 
 //API Routes
