@@ -1,13 +1,21 @@
+# Dependencies
 node_modules/
-.env
+backend/node_modules/
+
+# Build outputs
+dist/
+build/
 *.log
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Results
 results.json
 results/
-dist/
-.eslintrc.json
-.prettierrc
-LICENSE (MIT)
-CONTRIBUTING.md
-scripts/setup.sh
-.env.example
