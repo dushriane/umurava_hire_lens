@@ -8,7 +8,7 @@ const BATCH_SIZE = 20;
 const manualCandidates: CandidateProfile[] = [];
 
 export function loadCandidatesFromCSV(): CandidateProfile[] {
-  const filePath = path.join(__dirname, "../../../../src/data/resume_screening_dataset.csv");
+  const filePath = path.join(__dirname, "../../../../fixtures/resume_screening_dataset.csv");
   const content = fs.readFileSync(filePath, "utf-8");
 
   const records = parse(content, {

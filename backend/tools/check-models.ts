@@ -1,32 +1,56 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import * as dotenv from "dotenv";
+
 dotenv.config();
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-
-async function listModels() {
-  try {
-    console.log("🔍 Checking available Gemini models for your API key...");
-    const commonModels = [
-      "gemini-1.5-flash",
-      "gemini-1.5-flash-latest",
-      "gemini-1.5-pro",
-      "gemini-2.0-flash-exp",
-      "gemini-pro",
-    ];
-
-    for (const modelName of commonModels) {
-      try {
-        const m = genAI.getGenerativeModel({ model: modelName });
-        await m.generateContent("test");
-        console.log(`✅ [AVAILABLE] ${modelName}`);
-      } catch (e: any) {
-        console.log(`❌ [UNAVAILABLE] ${modelName} (Error: ${e.status || e.message})`);
-      }
-    }
-  } catch (err) {
-    console.error("Error listing models:", err);
+function validateEnv(): void {
+  if (!process.env.GEMINI_API_KEY) {
+    console.error("❌ GEMINI_API_KEY not set in .env");
+    process.exit(1);
   }
 }
 
-listModels();
+async function listModels(): Promise<void> {
+  validateEnv();
+
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+  const currentModel = process.env.GEMINI_MODEL || "gemini-2.0-flash";
+
+  const modelsToCheck = [
+    "gemini-2.0-flash",        
+    "gemini-1.5-flash",
+    "gemini-1.5-flash-latest",
+    "gemini-1.5-pro",
+    "gemini-2.0-flash-exp",
+    "gemini-pro",
+  ];
+
+  console.log(`\n🔍 Checking available Gemini models (current: ${currentModel})\n`);
+
+  let available = 0;
+  let unavailable = 0;
+
+  for (const modelName of modelsToCheck) {
+    try {
+      const m = genAI.getGenerativeModel({ model: modelName });
+      await m.generateContent("test");
+      console.log(`✅ [AVAILABLE] ${modelName}${modelName === currentModel ? " ← Currently configured" : ""}`);
+      available++;
+    } catch (e: any) {
+      const reason = e.status || e.message || "Unknown error";
+      console.log(`❌ [UNAVAILABLE] ${modelName} (${reason})`);
+      unavailable++;
+    }
+  }
+
+  console.log(`\n📊 Summary: ${available} available, ${unavailable} unavailable`);
+  
+  if (!modelsToCheck.includes(currentModel)) {
+    console.log(`\n⚠️  Your GEMINI_MODEL="${currentModel}" is not in the test list.`);
+  }
+}
+
+listModels().catch((err) => {
+  console.error("\n❌ Error:", err instanceof Error ? err.message : err);
+  process.exit(1);
+});

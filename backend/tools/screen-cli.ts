@@ -8,6 +8,13 @@ import { CandidateProfile, ScreeningResult } from "../src/modules/screening/type
 
 dotenv.config();
 
+function validateEnv(): void {
+  if (!process.env.GEMINI_API_KEY) {
+    console.error("❌ GEMINI_API_KEY not set in .env");
+    process.exit(1);
+  }
+}
+
 function printHelp(): void {
   console.log(`
 HireLens — AI candidate screening (Gemini)
@@ -26,7 +33,7 @@ Environment:
   GEMINI_API_KEY   Required
   GEMINI_MODEL     Optional (default: gemini-2.0-flash)
 
-Tip: copy fixtures/manual-*.json, edit profiles, then run with --job / --candidates paths.
+Tip: copy backend/fixtures/manual-*.json, edit profiles, then run with --job / --candidates paths.
 `.trim());
 }
 
@@ -79,6 +86,8 @@ function printResults(results: ScreeningResult[], jobTitle: string, pool: number
 }
 
 async function main(): Promise<void> {
+  validateEnv();
+    
   const args = parseArgs(process.argv.slice(2));
   if (args.help) {
     printHelp();
@@ -89,13 +98,13 @@ async function main(): Promise<void> {
   let candidates: CandidateProfile[] = testCandidates as CandidateProfile[];
 
   if (args.manual) {
-    job = parseJobJson(readJsonFile(path.join("fixtures", "manual-job.json")));
-    candidates = parseCandidatesJson(readJsonFile(path.join("fixtures", "manual-candidates.json")));
+    job = parseJobJson(readJsonFile(path.join("backend/fixtures", "manual-job.json")));
+    candidates = parseCandidatesJson(readJsonFile(path.join("backend/fixtures", "manual-candidates.json")));
   } else if (args.job && args.candidates) {
     job = parseJobJson(readJsonFile(args.job));
     candidates = parseCandidatesJson(readJsonFile(args.candidates));
   } else if (args.one) {
-    const jobPath = args.job ?? path.join("fixtures", "manual-job.json");
+    const jobPath = args.job ?? path.join("backend/fixtures", "manual-job.json");
     job = parseJobJson(readJsonFile(jobPath));
     const one = readJsonFile(args.one);
     candidates = parseCandidatesJson(Array.isArray(one) ? one : [one]);
@@ -126,6 +135,6 @@ async function main(): Promise<void> {
 }
 
 main().catch((e) => {
-  console.error(e instanceof Error ? e.message : e);
-  process.exit(1);
+    console.error(e instanceof Error ? e.message : e);
+    process.exit(1);
 });
