@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response} from "express";
 import cors from "cors";
 import { connectDB } from "./config/db";
 import config from "./config";
@@ -12,10 +12,23 @@ import screeningRoutes from "./modules/screening/screening.routes";
 import { verifyJwt } from "./middleware/authJwt";
 import errorHandler from "./middleware/errorHandler";
 
-// Connect to database
-connectDB();
+// Extend Express Request with user property
+declare global {
+  namespace Express {
+    interface Request {
+      user?: any;
+    }
+  }
+}
 
+//Initialize app
 const app = express();
+
+// Connect to database
+connectDB().catch((err) => {
+    logger.error("Failed to connect to database:", err);
+    process.exit(1);
+});
 
 // Global Middleware
 app.use(express.json());
@@ -40,13 +53,41 @@ app.use("/api/v1/jobs", jobRoutes);
 app.use("/api/v1/applicants", applicantRoutes);
 app.use("/api/v1/screening", screeningRoutes);
 
+// 404 Handler (before error middleware)
+app.use((req: Request, res: Response) => {
+  res.status(404).json({ error: "Route not found", path: req.path });
+});
+
 // Error Handling (must be last)
 app.use(errorHandler);
 
 // Start the server
 const PORT = config.server.port;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   logger.info(`Server is running in ${config.server.nodeEnv} mode on port ${PORT}`);
+});
+
+// Graceful shutdown
+process.on("SIGTERM", () => {
+  logger.info("SIGTERM received, shutting down gracefully");
+  server.close(() => {
+    logger.info("Server closed");
+    process.exit(0);
+  });
+});
+
+process.on("SIGINT", () => {
+  logger.info("SIGINT received, shutting down gracefully");
+  server.close(() => {
+    logger.info("Server closed");
+    process.exit(0);
+  });
+});
+
+// Handle unhandled rejections
+process.on("unhandledRejection", (err) => {
+  logger.error("Unhandled rejection:", err);
+  process.exit(1);
 });
 
 export default app;
