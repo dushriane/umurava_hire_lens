@@ -1,54 +1,122 @@
 import { screenCandidates } from "../../src/modules/screening/screenCandidates";
+import { createMockGeminiModel, defaultMockScreeningResponse, errorMockScreeningResponse } from "../mocks/geminiModel";
 
-async function runScreenCandidatesMock() {
-  console.log("Running screenCandidates mock test...");
-  const job = {
-    _id: "job_test",
-    title: "Backend Engineer",
-    requiredSkills: ["Node.js", "TypeScript"],
-  } as any;
+const testJob = {
+  _id: "job_integration_test",
+  title: "Backend Engineer",
+  requiredSkills: ["Node.js", "TypeScript"],
+  niceToHave: ["Docker"],
+  minExperienceYears: 2,
+  educationLevel: "Bachelor's or equivalent",
+  shortlistSize: 5,
+};
 
-  const candidates = [
-    { _id: "c1", name: "Alice", skills: ["Node.js"], experienceYears: 4 },
-  ];
+const testCandidates = [
+  {
+    _id: "c1",
+    name: "Alice Chen",
+    skills: ["Node.js", "TypeScript", "Docker"],
+    experienceYears: 4,
+    education: "BSc Computer Science",
+  },
+  {
+    _id: "c2",
+    name: "Bob Smith",
+    skills: ["Node.js"],
+    experienceYears: 2,
+    education: "Bootcamp",
+  },
+];
 
-  const fakeModel = {
-    generateContent: async () => ({
-      response: {
-        text: () => JSON.stringify([
-          { candidateId: "c1", rank: 1, score: 90, recommendation: "Interview", strengths: ["Good"], gaps: [], confidence: 95 }
-        ])
-      }
-    })
-  };
+async function testScreenCandidatesSuccess(): Promise<void> {
+  console.log("Test 1: screenCandidates - Success case\n");
 
-  const res = await screenCandidates(job, candidates as any, { getModel: () => fakeModel });
-  console.log("screenCandidates mock result:", JSON.stringify(res, null, 2));
+  const mockModel = createMockGeminiModel(defaultMockScreeningResponse);
+  const results = await screenCandidates(testJob as any, testCandidates as any, { getModel: () => mockModel });
+
+  if (!results || results.length === 0) {
+    throw new Error("Expected results, got empty array");
+  }
+
+  const result = results[0];
+  const requiredFields = ["candidateId", "rank", "score", "recommendation", "explanation"];
+  const missing = requiredFields.filter((f) => !(f in result));
+
+  if (missing.length > 0) {
+    throw new Error(`Missing fields in result: ${missing.join(", ")}`);
+  }
+
+  console.log(`✅ Got ${results.length} result(s)`);
+  console.log(`   Top candidate: ${result.candidateName} (Score: ${result.score}/100)\n`);
 }
 
-async function runCheckModelsMock() {
-  console.log("Running check-models mock test...");
-  const commonModels = [
-    "gemini-1.5-flash",
-    "gemini-1.5-pro",
-    "gemini-2.0-flash-exp",
-  ];
+async function testScreenCandidatesError(): Promise<void> {
+  console.log("Test 2: screenCandidates - Error handling\n");
 
-  for (const m of commonModels) {
-    try {
-      // simulate checking
-      await new Promise((r) => setTimeout(r, 50));
-      console.log(`✅ [AVAILABLE] ${m}`);
-    } catch (e) {
-      console.log(`❌ [UNAVAILABLE] ${m}`);
+  const errorModel = createMockGeminiModel({}, true);
+
+  try {
+    await screenCandidates(testJob as any, testCandidates as any, { getModel: () => errorModel });
+    throw new Error("Should have thrown an error");
+  } catch (e: any) {
+    if (e.message.includes("Mock Gemini API error")) {
+      console.log("✅ Error handling works correctly\n");
+    } else {
+      throw e;
     }
   }
 }
 
-async function runAll() {
-  await runScreenCandidatesMock();
-  await runCheckModelsMock();
-  console.log("All tests completed.");
+async function testMultipleCandidates(): Promise<void> {
+  console.log("Test 3: screenCandidates - Multiple candidates\n");
+
+  // Return multiple results
+  const multipleResults = [
+    ...defaultMockScreeningResponse,
+    {
+      candidateId: "c2",
+      candidateName: "Bob Smith",
+      rank: 2,
+      score: 70,
+      skillScore: 30,
+      experienceScore: 20,
+      educationScore: 10,
+      relevanceScore: 70,
+      strengths: ["Motivated learner"],
+      gaps: ["Limited experience"],
+      recommendation: "Consider",
+      confidence: 70,
+      explanation: "Potential fit with mentoring",
+    },
+  ];
+
+  const mockModel = createMockGeminiModel(multipleResults);
+  const results = await screenCandidates(testJob as any, testCandidates as any, { getModel: () => mockModel });
+
+  if (results.length !== 2) {
+    throw new Error(`Expected 2 results, got ${results.length}`);
+  }
+
+  console.log(`✅ Got ${results.length} results`);
+  results.forEach((r) => {
+    console.log(`   #${r.rank}: ${r.candidateName} (${r.score}/100)`);
+  });
+  console.log("");
 }
 
-runAll().catch((e) => { console.error(e); process.exit(1); });
+async function runAll(): Promise<void> {
+  try {
+    console.log("🧪 Running integration tests...\n");
+
+    await testScreenCandidatesSuccess();
+    await testScreenCandidatesError();
+    await testMultipleCandidates();
+
+    console.log("✅ All integration tests passed!\n");
+  } catch (e) {
+    console.error("❌ Test failed:", e instanceof Error ? e.message : e);
+    process.exit(1);
+  }
+}
+
+runAll();
