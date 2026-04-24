@@ -5,3 +5,9 @@ node_modules/
 results.json
 results/
 dist/
+.eslintrc.json
+.prettierrc
+LICENSE (MIT)
+CONTRIBUTING.md
+scripts/setup.sh
+.env.example
