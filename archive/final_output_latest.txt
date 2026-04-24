@@ -1,4 +1,4 @@
-﻿Γùç injected env (1) from .env // tip: Γîÿ custom filepath { path: '/custom/path/.env' }
+Γùç injected env (1) from .env // tip: Γîÿ custom filepath { path: '/custom/path/.env' }
 ≡ƒÜÇ HireLens AI ΓÇö running screening...
 
 ≡ƒôï Job: Backend Developer
@@ -37,7 +37,7 @@ Files\nodejs/node_mo ...
     + CategoryInfo        
       : NotSpecified: (G  
   emini batch fa...port   
- ed methods.:String) [    
+ed methods.:String) [    
 ], RemoteException
     + FullyQualifiedError 
    Id : NativeCommandErr  
@@ -59,8 +59,8 @@ a_hire_lens\node_modules\@
 google\generative-ai\dist\
 index.js:403:9)
     at async 
-generateContent (C:\Users\
-HP\Desktop\umurava_hire_le
+generateContent (C:\Users
+\HP\Desktop\umurava_hire_le
 ns\node_modules\@google\ge
 nerative-ai\dist\index.js:
 867:22)

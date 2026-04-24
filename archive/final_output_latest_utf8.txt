@@ -1,4 +1,4 @@
-﻿Γùç injected env (1) from .env // tip: Γîÿ override existing { override: true }
+Γùç injected env (1) from .env // tip: Γîÿ custom filepath { path: '/custom/path/.env' }
 ≡ƒÜÇ HireLens AI ΓÇö running screening...
 
 ≡ƒôï Job: Backend Developer
@@ -14,11 +14,12 @@ FetchError:
 Error]: Error fetching 
 from https://generativelan
 guage.googleapis.com/v1bet
-a/models/gemini-pro:genera
-teContent: [404 Not 
-Found] models/gemini-pro 
-is not found for API 
-version v1beta, or is not 
+a/models/gemini-1.5-flash-
+latest:generateContent: 
+[404 Not Found] models/gem
+ini-1.5-flash-latest is 
+not found for API version 
+v1beta, or is not 
 supported for 
 generateContent. Call 
 ListModels to see the 
@@ -36,7 +37,7 @@ Files\nodejs/node_mo ...
     + CategoryInfo        
       : NotSpecified: (G  
   emini batch fa...port   
- ed methods.:String) [    
+ed methods.:String) [    
 ], RemoteException
     + FullyQualifiedError 
    Id : NativeCommandErr  
@@ -58,8 +59,8 @@ a_hire_lens\node_modules\@
 google\generative-ai\dist\
 index.js:403:9)
     at async 
-generateContent (C:\Users\
-HP\Desktop\umurava_hire_le
+generateContent (C:\Users
+\HP\Desktop\umurava_hire_le
 ns\node_modules\@google\ge
 nerative-ai\dist\index.js:
 867:22)
@@ -67,14 +68,14 @@ nerative-ai\dist\index.js:
 screenCandidates (C:\Users
 \HP\Desktop\umurava_hire_l
 ens\src\ai\screenCandidate
-s.ts:35:22)
+s.ts:34:22)
     at async main (C:\User
 s\HP\Desktop\umurava_hire_
 lens\src\test.ts:11:19) {
   status: 404,
   statusText: 'Not Found',
   errorDetails: undefined
-}
 Γ£à SHORTLIST RESULTS
 
+}
 ============================================================
