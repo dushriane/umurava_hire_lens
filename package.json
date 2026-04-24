@@ -1,18 +1,33 @@
 {
   "name": "umurava_hire_lens",
   "version": "1.0.0",
-  "description": "",
+  "description": "AI-powered candidate screening platform",
   "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "install:all": "npm install && cd backend && npm install",
+    "dev": "cd backend && npm run dev",
+    "dev:watch": "cd backend && npm run dev:watch",
+    "build": "cd backend && npm run build",
+    "start": "cd backend && npm start",
+    "seed": "cd backend && npm run seed",
+    "test": "cd backend && npm test",
+    "test:smoke": "cd backend && npm run test:smoke",
+    "test:integration": "cd backend && npm run test:integration",
+    "lint": "cd backend && npm run lint",
     "screen": "tsx backend/tools/screen-cli.ts",
     "screen:demo": "tsx backend/tools/screen-cli.ts --demo",
     "screen:manual": "tsx backend/tools/screen-cli.ts --manual",
     "screen:one": "tsx backend/tools/screen-cli.ts --one fixtures/one-candidate.json",
     "check-models": "tsx backend/tools/check-models.ts"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "recruitment",
+    "ai",
+    "screening",
+    "candidates"
+  ],
+  "author": "Umurava",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {

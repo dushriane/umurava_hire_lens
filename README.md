@@ -4,32 +4,162 @@
 
 ---
 
-## 📌 Project Overview
+## � Project Structure
 
-**Umurava HireLens AI** is an intelligent recruitment assistant designed to help recruiters efficiently screen, evaluate, and shortlist candidates using AI—while keeping humans in control of final hiring decisions.
+```
+umurava_hire_lens/
+├── backend/              # Node.js + Express backend (main application)
+│   ├── src/             # TypeScript source code
+│   ├── tools/           # CLI utilities for testing
+│   ├── scripts/         # Backend setup scripts (seed, etc.)
+│   ├── tests/           # Integration and unit tests
+│   ├── dist/            # Compiled output (build)
+│   └── package.json     # Backend dependencies
+├── docs/                # Project documentation
+├── fixtures/            # Test data (JSON fixtures)
+├── scripts/             # Repo-level helper scripts
+└── archive/             # Backup of removed artifacts
+```
 
-The platform addresses two major challenges in recruitment:
+## 🏗️ Architecture
 
-* Handling **high volumes of applications**
-* Ensuring **fair and objective candidate comparison**
+- **Backend**: Express.js + TypeScript + MongoDB + Mongoose + Gemini AI
+- **Auth**: JWT-based authentication with mock login
+- **Modules**: Feature-based organization (auth, job, applicant, screening)
+- **Testing**: Mocked Gemini model for deterministic, network-free tests
+- **Configuration**: Centralized env-based config loader
 
-By combining structured talent profiles with AI-powered analysis, HireLens provides:
+---
 
-* Ranked candidate shortlists
-* Clear, explainable reasoning
-* Faster and more confident decision-making
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+
+- MongoDB (local or Atlas)
+- Gemini API key
+
+### Installation
+
+```bash
+# Install dependencies (root + backend)
+npm run install:all
+
+# Or manually:
+cd backend
+npm install
+```
+
+### Environment Setup
+
+Copy `.env.example` to `backend/.env` and set:
+
+```bash
+MONGODB_URI=mongodb://localhost:27017/hire_lens
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-2.0-flash
+JWT_SECRET=your_jwt_secret
+API_KEY=optional_api_key
+PORT=3000
+NODE_ENV=development
+```
+
+### Running the Server
+
+From the repo root:
+
+```bash
+# Development (auto-reload)
+npm run dev:watch
+
+# Or just development
+npm run dev
+
+# Production build & start
+npm run build
+npm start
+
+# Seed test data
+npm run seed
+
+# Run tests
+npm test
+npm run test:smoke
+npm run test:integration
+```
+
+### CLI Tools
+
+```bash
+# Screen candidates from fixtures
+npm run screen
+npm run screen:demo
+npm run screen:manual
+
+# Check available Gemini models
+npm run check-models
+```
+
+---
+
+## 📚 API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/auth/login` | Login with credentials |
+| GET | `/api/v1/profile` | Get user profile (JWT required) |
+| GET | `/api/v1/jobs` | List jobs |
+| POST | `/api/v1/jobs` | Create job |
+| GET | `/api/v1/applicants` | List applicants |
+| POST | `/api/v1/applicants` | Create applicant |
+| POST | `/api/v1/screening` | Screen candidates |
+| GET | `/api/v1/screening/:jobId` | Get screening results |
+
+### Login Example
+
+```bash
+curl -X POST http://localhost:3000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"recruiter","password":"password123"}'
+
+# Response:
+# { "token": "eyJ...", "user": { "username": "recruiter", ... } }
+```
+
+---
+
+## 🧪 Testing
+
+Tests are organized into:
+
+- **Unit Tests** (`backend/tests/unit/`) - Module-level tests
+- **Integration Tests** (`backend/tests/integration/`) - Smoke tests & end-to-end
+- **Mocks** (`backend/tests/mocks/`) - Mock Gemini model factory
+
+Run from root:
+
+```bash
+npm test              # All tests
+npm run test:smoke    # Smoke test only
+npm run test:integration  # Integration tests
+```
+
+---
+
+## 📖 Additional Documentation
+
+- [Architecture & Setup Details](docs/README.md) - In-depth architecture guide
+- [Backend Modules](backend/src/modules/) - Module-specific logic
+- [Environment Variables](backend/.env.example) - Required env vars
 
 ---
 
 ## 🎯 Problem Statement
 
 Recruiters often struggle with:
-
 * Time-consuming manual screening processes
 * Difficulty comparing candidates across diverse formats
 
 This system answers the question:
-
 > *How can AI be used to accurately, transparently, and efficiently screen and shortlist candidates while preserving human-led decisions?*
 
 ---
@@ -37,15 +167,13 @@ This system answers the question:
 ## ✨ Key Features
 
 ### 🧾 Job Management
-
 * Create and manage job postings
 * Define required skills, experience, and criteria
 
 ### 👤 Applicant Ingestion
-
-* Structured talent profile input (based on provided schema)
+* Structured talent profile input
 * Support for CSV / manual entry
-* Resume upload (optional enhancement)
+* Resume upload support
 
 ### 🤖 AI-Powered Screening
 

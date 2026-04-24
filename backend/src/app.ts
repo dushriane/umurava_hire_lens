@@ -1,52 +1,52 @@
-import express, {Request, Response, NextFunction} from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv'
-import { connectDB } from './config/db';
-import jobRoutes from './modules/job/job.routes';
-import applicantRoutes from './modules/applicant/applicant.routes';
+import express, { Request, Response, NextFunction } from "express";
+import cors from "cors";
+import { connectDB } from "./config/db";
+import config from "./config";
+import logger from "./utils/logger";
+
+import authRoutes from "./modules/auth/auth.routes";
+import jobRoutes from "./modules/job/job.routes";
+import applicantRoutes from "./modules/applicant/applicant.routes";
 import screeningRoutes from "./modules/screening/screening.routes";
 
-// Load environment variables from .env file
-dotenv.config();
+import { verifyJwt } from "./middleware/authJwt";
+import errorHandler from "./middleware/errorHandler";
 
-//connect to database
+// Connect to database
 connectDB();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Middleware
-import authRoutes from './modules/auth/auth.routes';
-import { verifyJwt } from './middleware/authJwt';
+// Global Middleware
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-    app.use('/api/v1/auth', authRoutes);
 
-//Health Check Route
-app.get("/health", (req:Request, res: Response) => {
-    res.status(200).json({status: "ok", message: "Umurava Hire Lens API is running"});
+// API Routes
+app.use("/api/v1/auth", authRoutes);
+
+// Health Check
+app.get("/health", (req: Request, res: Response) => {
+  res.status(200).json({ status: "ok", message: "Umurava Hire Lens API is running" });
 });
 
-app.get('/api/v1/profile', verifyJwt, (req, res) => {
-    res.json({ user: (req as any).user });
+// Protected Profile Route
+app.get("/api/v1/profile", verifyJwt, (req, res) => {
+  res.json({ user: (req as any).user });
 });
 
-//API Routes
+// Business Routes
 app.use("/api/v1/jobs", jobRoutes);
 app.use("/api/v1/applicants", applicantRoutes);
 app.use("/api/v1/screening", screeningRoutes);
 
-//Error Handling
-app.use((err: any, req:Request, res:Response, next:NextFunction) => {
-    console.error("Unhandled Error:", err);
-    res.status(500).json({
-        error: "Internal Server Error",
-        message: process.env.NODE_ENV === "development" ? err.message: undefined,
-    });
+// Error Handling (must be last)
+app.use(errorHandler);
+
+// Start the server
+const PORT = config.server.port;
+app.listen(PORT, () => {
+  logger.info(`Server is running in ${config.server.nodeEnv} mode on port ${PORT}`);
 });
 
-//start the server
-app.listen(PORT, () => {
-    console.log(`Server is running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-});
+export default app;
