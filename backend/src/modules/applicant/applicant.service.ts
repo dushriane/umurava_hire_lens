@@ -157,9 +157,9 @@ export class ApplicantService {
   /**
    * Return all applicants for a specific job
    */
-  public static async getApplicantsByJob(jobId: string): Promise<IApplicant[]> {
-    return await Applicant.find({ jobId });
-  }
+  public static async getApplicantsByJob(jobId: string, skip: number = 0, limit: number = 20) {
+  return Applicant.find({ jobId }).skip(skip).limit(limit);
+}
 
   /**
    * Return single applicant
@@ -168,7 +168,7 @@ export class ApplicantService {
     return await Applicant.findById(id);
   }
 
-  public static async getAllApplicants(): Promise<IApplicant[]> {
-    return await Applicant.find().exec();
+  public static async getAllApplicants(skip: number = 0, limit: number = 20) {
+    return await Applicant.find().skip(skip).limit(limit);
   }
 }
