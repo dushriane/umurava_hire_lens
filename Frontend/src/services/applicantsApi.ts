@@ -2,7 +2,7 @@ import api from '@/lib/axios'
 import { Applicant, UmuravaProfile } from '@/types'
 import { MOCK_UMURAVA_PROFILES } from '@/lib/mockData'
 
-const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true' || true
+const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true' 
 const delay = (ms = 600) => new Promise(resolve => setTimeout(resolve, ms))
 
 export const applicantsApi = {
@@ -10,7 +10,7 @@ export const applicantsApi = {
   // GET /api/jobs/:jobId/applicants — Umurava profiles who applied
   getByJob: async (jobId: string): Promise<UmuravaProfile[]> => {
     if (USE_MOCK) { await delay(); return MOCK_UMURAVA_PROFILES }
-    const { data } = await api.get(`/jobs/${jobId}/applicants`)
+    const { data } = await api.get(`/applicants/${jobId}`)
     return data.data
   },
 
@@ -36,7 +36,7 @@ export const applicantsApi = {
     const formData = new FormData()
     formData.append('file', file)
     const { data } = await api.post(
-      `/jobs/${jobId}/applicants/upload-csv`,
+      `/applicants/${jobId}/upload-csv`,
       formData,
       { headers: { 'Content-Type': 'multipart/form-data' } }
     )
@@ -50,7 +50,7 @@ export const applicantsApi = {
     const formData = new FormData()
     Array.from(files).forEach(f => formData.append('resumes', f))
     const { data } = await api.post(
-      `/jobs/${jobId}/applicants/upload-resumes`,
+      `/applicants/${jobId}/upload-resumes`,
       formData,
       { headers: { 'Content-Type': 'multipart/form-data' } }
     )

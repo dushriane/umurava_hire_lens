@@ -2,7 +2,7 @@ import api from '@/lib/axios'
 import { ScreeningSettings, ScreeningResult } from '@/types'
 import { MOCK_SCREENING_RESULT } from '@/lib/mockData'
 
-const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true' || true
+const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true' 
 const delay = (ms = 2500) => new Promise(resolve => setTimeout(resolve, ms))
 
 export const screeningApi = {
@@ -22,7 +22,7 @@ export const screeningApi = {
         totalScreened: settings.applicantIds.length,
       }
     }
-    const { data } = await api.post('/screening/run', settings)
+    const { data } = await api.post(`/screening/${settings.jobId}/screen`, settings)
     return data.data
   },
 

@@ -2,7 +2,7 @@ import api from '@/lib/axios'
 import { Job, CreateJobPayload } from '@/types'
 import { MOCK_JOBS } from '@/lib/mockData'
 
-const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true' || true
+const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true' 
 
 // Simulate realistic network delay
 const delay = (ms = 600) => new Promise(resolve => setTimeout(resolve, ms))
