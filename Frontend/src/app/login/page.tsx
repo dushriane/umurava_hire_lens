@@ -2,7 +2,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { authApi } from '@/services/authApi'
-import Image from 'next/image'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -31,13 +30,7 @@ export default function LoginPage() {
         {/* Header */}
         <div style={styles.header}>
           <div style={styles.logo}>
-            <Image 
-              src="/umurava-logo.png" 
-              alt="Umurava Logo" 
-              width={60} 
-              height={60}
-              priority
-            />
+            <img src="/umurava-logo.png" alt="Umurava Logo" width={48} height={48} />
           </div>
           <h1 style={styles.title}>Umurava</h1>
           <p style={styles.subtitle}>AI-Powered Talent Screening</p>

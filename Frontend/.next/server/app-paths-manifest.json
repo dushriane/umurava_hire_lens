@@ -1,7 +1,3 @@
 {
-  "/page": "app/page.js",
-  "/jobs/page": "app/jobs/page.js",
-  "/jobs/create/page": "app/jobs/create/page.js",
-  "/screen/page": "app/screen/page.js",
   "/login/page": "app/login/page.js"
 }
