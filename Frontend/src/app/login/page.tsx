@@ -15,8 +15,16 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
     try {
-      await authApi.login(username, password)
-      router.push('/')
+    //   await authApi.login(username, password)
+    //   router.push('/')
+
+        console.log('Attempting login...')
+        const result = await authApi.login(username, password)
+        console.log('Login result:', result)
+        console.log('Token in localStorage:', localStorage.getItem('umurava_token'))
+        
+        console.log('Redirecting to /')
+        router.push('/')
     } catch (err: any) {
       setError(err.message || 'Login failed. Please try again.')
     } finally {

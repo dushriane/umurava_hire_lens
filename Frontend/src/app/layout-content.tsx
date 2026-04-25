@@ -10,12 +10,19 @@ export default function RootLayoutContent({ children }: { children: React.ReactN
   const [loading, setLoading] = React.useState(true)
 
   useEffect(() => {
+    // 1. remove
+    console.log('layout-content useEffect running, pathname:', pathname)
+  
     if (typeof window !== 'undefined') {
       const storedToken = localStorage.getItem('umurava_token')
+      //2. remove
+      console.log('Token from localStorage:', storedToken)
       setToken(storedToken)
       
       // Redirect to login if no token and not already on login page
       if (!storedToken && !pathname.startsWith('/login')) {
+        //3. remove
+        console.log('No token and not on login, redirecting to login')
         router.push('/login')
       }
       setLoading(false)
