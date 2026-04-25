@@ -290,7 +290,7 @@ export default function ScreenPage() {
 
             {/* CSV Upload */}
             <label style={{ display: 'block', cursor: 'pointer' }}>
-              <input type="file" accept=".csv,.xlsx" style={{ display: 'none' }} onChange={handleCsvUpload} />
+              <input type="file" accept=".csv" style={{ display: 'none' }} onChange={handleCsvUpload} />
               <div className="um-upload-zone" style={{ marginBottom: 16 }}>
                 <div className="um-upload-icon">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--um-primary)" strokeWidth="2">
@@ -299,10 +299,10 @@ export default function ScreenPage() {
                   </svg>
                 </div>
                 <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--um-text)', marginBottom: 4 }}>
-                  Upload CSV / Excel Spreadsheet
+                  Upload CSV Spreadsheet
                 </div>
                 <div style={{ fontSize: 12, color: 'var(--um-muted)' }}>
-                  Click to browse · .csv, .xlsx supported
+                  Click to browse · .csv supported
                 </div>
                 {uploadStatus === 'uploading' && (
                   <div style={{ marginTop: 8, fontSize: 12, color: 'var(--um-primary)', fontWeight: 600 }}>

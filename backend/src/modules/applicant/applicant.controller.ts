@@ -155,14 +155,18 @@ export class ApplicantController {
         return;
       }
 
+      const fileExtension = file.originalname.split(".").pop()?.toLowerCase();
+
       // Validate MIME type
-      if (!ALLOWED_FILE_TYPES.includes(file.mimetype)) {
-        logger.warn("Invalid file type", { mimetype: file.mimetype });
+      const isAllowedMime = ALLOWED_FILE_TYPES.includes(file.mimetype) || 
+                            file.mimetype === "application/vnd.ms-excel" ||
+                            file.mimetype === "application/csv";
+                            
+      if (!isAllowedMime && fileExtension !== "csv" && fileExtension !== "pdf") {
+        logger.warn("Invalid file type", { mimetype: file.mimetype, extension: fileExtension });
         res.status(400).json({ error: "Only PDF and CSV files are allowed" });
         return;
       }
-
-      const fileExtension = file.originalname.split(".").pop()?.toLowerCase();
 
       // Handle PDF upload
       if (fileExtension === "pdf") {

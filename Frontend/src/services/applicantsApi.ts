@@ -5,6 +5,15 @@ import { MOCK_UMURAVA_PROFILES } from '@/lib/mockData'
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true' 
 const delay = (ms = 600) => new Promise(resolve => setTimeout(resolve, ms))
 
+const mapApplicant = (data: any): Applicant => {
+  return {
+    ...data,
+    id: data.id || data._id,
+    fullName: data.fullName || data.name || 'Unknown Candidate',
+    source: (data.source === 'csv' || data.source === 'pdf') ? 'external' : data.source || 'external',
+  }
+}
+
 export const applicantsApi = {
 
   // GET /api/jobs/:jobId/applicants — Umurava profiles who applied
@@ -13,7 +22,8 @@ export const applicantsApi = {
     try {
       const { data } = await api.get(`/applicants/${jobId}`)
       console.debug('[applicantsApi] GET /applicants/:jobId SUCCESS:', data)
-      return data.data
+      const apps = data.data || [];
+      return apps.map(mapApplicant) as UmuravaProfile[];
     } catch (error) {
       console.error('[applicantsApi] GET /applicants/:jobId FAILED:', error)
       throw error
@@ -43,13 +53,10 @@ export const applicantsApi = {
       const formData = new FormData()
       formData.append('file', file)
       formData.append('jobId', jobId)
-      const { data } = await api.post(
-        `/applicants/upload`,
-        formData,
-        { headers: { 'Content-Type': 'multipart/form-data' } }
-      )
+      const { data } = await api.post(`/applicants/upload`, formData)
       console.debug('[applicantsApi] POST /applicants/upload SUCCESS:', data)
-      return data.applicants || (data.applicant ? [data.applicant] : [])
+      const apps = data.applicants || (data.applicant ? [data.applicant] : [])
+      return apps.map(mapApplicant)
     } catch (error) {
       console.error('[applicantsApi] POST /applicants/:jobId/upload-csv FAILED:', error)
       throw error
@@ -66,14 +73,12 @@ export const applicantsApi = {
           const formData = new FormData()
           formData.append('file', f)
           formData.append('jobId', jobId)
-          const { data } = await api.post(`/applicants/upload`, formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-          })
-          return data.applicant
+          const { data } = await api.post(`/applicants/upload`, formData)
+          return data.applicant ? mapApplicant(data.applicant) : null
         })
       )
       console.debug('[applicantsApi] POST /applicants/upload SUCCESS:', applicants)
-      return applicants.filter(Boolean)
+      return applicants.filter(Boolean) as Applicant[]
     } catch (error) {
       console.error('[applicantsApi] POST /applicants/:jobId/upload-resumes FAILED:', error)
       throw error

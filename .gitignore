@@ -12,10 +12,12 @@ build/
 .env.local
 .env.*.local
 
+.next/*
+
 # OS
 .DS_Store
 Thumbs.db
 
 # Results
 results.json
-results/
+results/           
