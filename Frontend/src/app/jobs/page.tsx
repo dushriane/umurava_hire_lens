@@ -8,7 +8,7 @@ import Topbar from '@/components/Topbar'
 import { Job } from '@/types'
 
 function StatusBadge({ status }: { status: string }) {
-  if (status === 'active')    return <span className="um-badge um-badge-active">Active</span>
+  if (status === 'active' || status === 'open') return <span className="um-badge um-badge-active">Active</span>
   if (status === 'screening') return <span className="um-badge um-badge-yellow">Screening</span>
   if (status === 'draft')     return <span className="um-badge um-badge-closed">Draft</span>
   return <span className="um-badge um-badge-closed">Closed</span>
@@ -110,9 +110,11 @@ export default function JobsPage() {
         )}
 
         {/* Job cards */}
-        {filtered.map((job: Job) => (
+        {filtered.map((job: Job) => {
+          const safeId = job.id || (job as any)._id;
+          return (
           <div
-            key={job.id}
+            key={safeId}
             className="um-card"
             style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}
           >
@@ -120,7 +122,7 @@ export default function JobsPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6, flexWrap: 'wrap' }}>
                 <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--um-text)' }}>{job.title}</div>
                 <StatusBadge status={job.status} />
-                {results[job.id] && (
+                {results[safeId] && (
                   <span className="um-badge um-badge-primary" style={{ fontSize: 10 }}>AI Screened ✓</span>
                 )}
               </div>
@@ -131,43 +133,43 @@ export default function JobsPage() {
                 <span>Posted {job.postedDate}</span>
               </div>
               <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                {job.requiredSkills.slice(0, 5).map(s => (
+                {(job.requiredSkills || []).slice(0, 5).map(s => (
                   <span key={s} className="um-tag">{s}</span>
                 ))}
-                {job.requiredSkills.length > 5 && (
-                  <span className="um-tag">+{job.requiredSkills.length - 5} more</span>
+                {(job.requiredSkills || []).length > 5 && (
+                  <span className="um-tag">+{(job.requiredSkills || []).length - 5} more</span>
                 )}
               </div>
             </div>
-
+            
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10, flexShrink: 0, marginLeft: 20 }}>
               <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--um-primary)' }}>{job.applicantCount}</div>
+                <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--um-primary)' }}>{job.applicantCount || 0}</div>
                 <div style={{ fontSize: 11, color: 'var(--um-muted)' }}>applicants</div>
               </div>
               <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
                 <button
                   className="um-btn um-btn-ghost um-btn-sm"
-                  onClick={e => handleDelete(e, job.id)}
+                  onClick={e => handleDelete(e, safeId)}
                 >
                   Delete
                 </button>
-                <Link href={`/jobs/create?edit=${job.id}`}>
+                <Link href={`/jobs/create?edit=${safeId}`}>
                   <button className="um-btn um-btn-ghost um-btn-sm">Edit</button>
                 </Link>
-                {results[job.id] ? (
+                {results[safeId] ? (
                   <Link href="/shortlist">
                     <button className="um-btn um-btn-primary um-btn-sm">View Results</button>
                   </Link>
                 ) : (
-                  <Link href={`/screen?jobId=${job.id}`}>
+                  <Link href={`/screen?jobId=${safeId}`}>
                     <button className="um-btn um-btn-outline um-btn-sm">Screen Now</button>
                   </Link>
                 )}
               </div>
             </div>
           </div>
-        ))}
+        )})}
 
         {/* Empty state */}
         {jobsStatus === 'succeeded' && filtered.length === 0 && (

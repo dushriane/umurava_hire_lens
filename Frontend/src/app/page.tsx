@@ -7,7 +7,7 @@ import { selectAllResults } from '@/store/screeningSlice'
 import Topbar from '@/components/Topbar'
 
 function StatusBadge({ status }: { status: string }) {
-  if (status === 'active')    return <span className="um-badge um-badge-active">Active</span>
+  if (status === 'active' || status === 'open') return <span className="um-badge um-badge-active">Active</span>
   if (status === 'screening') return <span className="um-badge um-badge-yellow">Screening</span>
   return <span className="um-badge um-badge-closed">Closed</span>
 }
@@ -124,9 +124,12 @@ export default function DashboardPage() {
             </Link>
           </div>
         ) : (
-          jobs.slice(0, 4).map((job) => (
+          jobs.slice(0, 4).map((job) => {
+            const safeId = job.id || (job as any)._id;
+            return (
             <div
-              key={job.id || (job as any)._id}
+              key={safeId}
+              onClick={() => window.location.href = `/screen?jobId=${safeId}`}
               className="um-card"
               style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12, cursor: 'pointer', transition: 'border-color 0.15s' }}
               onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--um-primary)')}
@@ -136,7 +139,7 @@ export default function DashboardPage() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
                   <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--um-text)' }}>{job.title}</div>
                   <StatusBadge status={job.status} />
-                  {results[job.id || (job as any)._id] && (
+                  {results[safeId] && (
                     <span className="um-badge um-badge-primary" style={{ fontSize: 10 }}>Screened ✓</span>
                   )}
                 </div>
@@ -159,14 +162,14 @@ export default function DashboardPage() {
                 {job.applicantCount || 0}
               </div>
               <div style={{ fontSize: 11, color: 'var(--um-muted)' }}>applicants</div>
-              {results[job.id || (job as any)._id] && (
+              {results[safeId] && (
                 <div style={{ fontSize: 12, color: 'var(--um-success)', fontWeight: 600, marginTop: 4 }}>
-                  Top: {results[job.id || (job as any)._id].topScore}
+                  Top: {results[safeId].topScore}
                 </div>
               )}
             </div>
           </div>
-        )))}
+        )}))}
 
         {/* Empty state */}
         {jobsStatus === 'succeeded' && jobs.length === 0 && (

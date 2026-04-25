@@ -1,4 +1,7 @@
 {
+  "/jobs/create/page": "app/jobs/create/page.js",
+  "/screen/page": "app/screen/page.js",
   "/page": "app/page.js",
-  "/jobs/create/page": "app/jobs/create/page.js"
+  "/shortlist/page": "app/shortlist/page.js",
+  "/jobs/page": "app/jobs/page.js"
 }

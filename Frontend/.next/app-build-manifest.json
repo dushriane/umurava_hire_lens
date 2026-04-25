@@ -1,9 +1,9 @@
 {
   "pages": {
-    "/jobs/page": [
+    "/jobs/create/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/jobs/page.js"
+      "static/chunks/app/jobs/create/page.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",
@@ -16,10 +16,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/page.js"
     ],
-    "/jobs/create/page": [
+    "/screen/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/jobs/create/page.js"
+      "static/chunks/app/screen/page.js"
+    ],
+    "/shortlist/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/shortlist/page.js"
+    ],
+    "/jobs/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/jobs/page.js"
     ]
   }
 }

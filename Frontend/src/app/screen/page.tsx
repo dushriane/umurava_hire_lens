@@ -21,7 +21,7 @@ export default function ScreenPage() {
   const searchParams = useSearchParams()
   const dispatch     = useAppDispatch()
 
-  const jobIdParam      = searchParams.get('jobId') || 'job-001'
+  const jobIdParam      = searchParams.get('jobId')
   const jobs            = useAppSelector(selectAllJobs)
   const job             = useAppSelector(selectJobById(jobIdParam))
   const applicants      = useAppSelector(selectApplicantsByJob(jobIdParam))
@@ -34,12 +34,18 @@ export default function ScreenPage() {
   const [weightsSkills, setWeightsSkills] = useState(40)
   const [weightsExp,    setWeightsExp]    = useState(35)
   const [weightsEdu,    setWeightsEdu]    = useState(15)
-  const [selectedJobId, setSelectedJobId] = useState(jobIdParam)
+  const [selectedJobId, setSelectedJobId] = useState(jobIdParam || '')
 
   // Load jobs + applicants on mount
   useEffect(() => {
     dispatch(fetchJobs())
   }, [dispatch])
+
+  useEffect(() => {
+    if (jobs.length > 0 && !selectedJobId) {
+      setSelectedJobId(jobs[0].id || (jobs[0] as any)._id)
+    }
+  }, [jobs, selectedJobId])
 
   useEffect(() => {
     if (selectedJobId) {
@@ -164,9 +170,12 @@ export default function ScreenPage() {
                 value={selectedJobId}
                 onChange={e => setSelectedJobId(e.target.value)}
               >
-                {jobs.map(j => (
-                  <option key={j.id} value={j.id}>{j.title} ({j.applicantCount} applicants)</option>
-                ))}
+                {jobs.map(j => {
+                  const safeId = j.id || (j as any)._id;
+                  return (
+                    <option key={safeId} value={safeId}>{j.title} ({j.applicantCount || 0} applicants)</option>
+                  )
+                })}
               </select>
             </div>
             {job && (

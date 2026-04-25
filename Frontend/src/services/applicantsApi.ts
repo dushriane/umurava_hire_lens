@@ -42,13 +42,14 @@ export const applicantsApi = {
     try {
       const formData = new FormData()
       formData.append('file', file)
+      formData.append('jobId', jobId)
       const { data } = await api.post(
-        `/applicants/${jobId}/upload-csv`,
+        `/applicants/upload`,
         formData,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       )
-      console.debug('[applicantsApi] POST /applicants/:jobId/upload-csv SUCCESS:', data)
-      return data.data
+      console.debug('[applicantsApi] POST /applicants/upload SUCCESS:', data)
+      return data.applicants || (data.applicant ? [data.applicant] : [])
     } catch (error) {
       console.error('[applicantsApi] POST /applicants/:jobId/upload-csv FAILED:', error)
       throw error
@@ -60,15 +61,19 @@ export const applicantsApi = {
   uploadResumes: async (jobId: string, files: FileList): Promise<Applicant[]> => {
     if (USE_MOCK) { await delay(1500); return [] }
     try {
-      const formData = new FormData()
-      Array.from(files).forEach(f => formData.append('resumes', f))
-      const { data } = await api.post(
-        `/applicants/${jobId}/upload-resumes`,
-        formData,
-        { headers: { 'Content-Type': 'multipart/form-data' } }
+      const applicants = await Promise.all(
+        Array.from(files).map(async (f) => {
+          const formData = new FormData()
+          formData.append('file', f)
+          formData.append('jobId', jobId)
+          const { data } = await api.post(`/applicants/upload`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          })
+          return data.applicant
+        })
       )
-      console.debug('[applicantsApi] POST /applicants/:jobId/upload-resumes SUCCESS:', data)
-      return data.data
+      console.debug('[applicantsApi] POST /applicants/upload SUCCESS:', applicants)
+      return applicants.filter(Boolean)
     } catch (error) {
       console.error('[applicantsApi] POST /applicants/:jobId/upload-resumes FAILED:', error)
       throw error
