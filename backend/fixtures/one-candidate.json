@@ -1,0 +1,13 @@
+{
+  "_id": "cand_quick_test",
+  "name": "Quick Test Candidate",
+  "email": "test.candidate@example.com",
+  "phone": "+1-555-999-8888",
+  "skills": ["Node.js", "PostgreSQL", "Docker"],
+  "experienceYears": 5,
+  "education": "BSc Information Technology",
+  "languages": ["English"],
+  "projects": ["Internal HR portal APIs"],
+  "certifications": [],
+  "resumeUrl": "https://example.com/resumes/test_candidate.pdf"
+}

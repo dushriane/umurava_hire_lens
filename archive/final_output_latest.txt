@@ -1,0 +1,81 @@
+Γùç injected env (1) from .env // tip: Γîÿ custom filepath { path: '/custom/path/.env' }
+≡ƒÜÇ HireLens AI ΓÇö running screening...
+
+≡ƒôï Job: Backend Developer
+≡ƒæÑ Candidates: 20
+≡ƒÄ» Shortlist size: 5
+
+Sending to Gemini...
+
+node.exe : Gemini batch 
+failed: GoogleGenerativeAI
+FetchError: 
+[GoogleGenerativeAI 
+Error]: Error fetching 
+from https://generativelan
+guage.googleapis.com/v1bet
+a/models/gemini-1.5-flash-
+latest:generateContent: 
+[404 Not Found] models/gem
+ini-1.5-flash-latest is 
+not found for API version 
+v1beta, or is not 
+supported for 
+generateContent. Call 
+ListModels to see the 
+list of available models 
+and their supported 
+methods.
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (G  
+  emini batch fa...port   
+ed methods.:String) [    
+], RemoteException
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+    at 
+handleResponseNotOk (C:\Us
+ers\HP\Desktop\umurava_hir
+e_lens\node_modules\@googl
+e\generative-ai\dist\index
+.js:434:11)
+    at process.processTick
+sAndRejections (node:inter
+nal/process/task_queues:10
+4:5)
+    at async makeRequest (
+C:\Users\HP\Desktop\umurav
+a_hire_lens\node_modules\@
+google\generative-ai\dist\
+index.js:403:9)
+    at async 
+generateContent (C:\Users
+\HP\Desktop\umurava_hire_le
+ns\node_modules\@google\ge
+nerative-ai\dist\index.js:
+867:22)
+    at async 
+screenCandidates (C:\Users
+\HP\Desktop\umurava_hire_l
+ens\src\ai\screenCandidate
+s.ts:34:22)
+    at async main (C:\User
+s\HP\Desktop\umurava_hire_
+lens\src\test.ts:11:19) {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+Γ£à SHORTLIST RESULTS
+
+}
+============================================================

@@ -1,0 +1,23 @@
+[
+  {
+    "username": "recruiter",
+    "email": "recruiter@example.com",
+    "password": "recruiter123",
+    "name": "Demo Recruiter",
+    "role": "recruiter"
+  },
+  {
+    "username": "admin",
+    "email": "admin@example.com",
+    "password": "admin123",
+    "name": "System Administrator",
+    "role": "admin"
+  },
+  {
+    "username": "hiring_manager",
+    "email": "hiring.manager@example.com",
+    "password": "manager123",
+    "name": "Hiring Manager",
+    "role": "recruiter"
+  }
+]
