@@ -1,5 +1,5 @@
 import { screenCandidates } from "../../src/modules/screening/screenCandidates";
-import { createMockGeminiModel, defaultMockScreeningResponse } from "../mocks/geminiModel";
+import { createMockGeminiModel, defaultMockScreeningResponse, createErrorMockGeminiModel } from "../mocks/geminiModel";
 
 const testJob = {
   _id: "job_test_1",
@@ -13,7 +13,7 @@ const testJob = {
 
 const mockCandidates = [
   {
-    _id: "cand_test_1",
+    _id: "c1",
     name: "Test User",
     skills: ["Node.js", "TypeScript"],
     experienceYears: 3,
@@ -50,17 +50,12 @@ async function run(): Promise<void> {
 
     // Test 3: Error scenario
     console.log("Test 3: Testing error handling");
-    const errorModel = createMockGeminiModel({}, true);
-    try {
-      await screenCandidates(testJob as any, mockCandidates as any, { getModel: () => errorModel });
-      console.log("❌ Error: Should have thrown an error");
-      process.exit(1);
-    } catch (e: any) {
-      if (e.message.includes("Mock Gemini API error")) {
-        console.log("✅ Error handling works as expected\n");
-      } else {
-        throw e;
-      }
+    const errorModel = createErrorMockGeminiModel();
+    const errorResults = await screenCandidates(testJob as any, mockCandidates as any, { getModel: () => errorModel });
+    if (!errorResults || errorResults.length === 0) {
+        console.log("✅ Error handling works as expected - returned empty results on failure\n");
+    } else {
+        throw new Error("Expected empty results on error");
     }
 
     console.log("✅ All smoke tests passed!");

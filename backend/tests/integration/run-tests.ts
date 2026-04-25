@@ -1,5 +1,6 @@
 import { screenCandidates } from "../../src/modules/screening/screenCandidates";
-import { createMockGeminiModel, defaultMockScreeningResponse, errorMockScreeningResponse } from "../mocks/geminiModel";
+import { createMockGeminiModel, defaultMockScreeningResponse, createErrorMockGeminiModel } from "../mocks/geminiModel";
+import { ScreeningResult } from "../../src/modules/screening/types";
 
 const testJob = {
   _id: "job_integration_test",
@@ -53,17 +54,14 @@ async function testScreenCandidatesSuccess(): Promise<void> {
 async function testScreenCandidatesError(): Promise<void> {
   console.log("Test 2: screenCandidates - Error handling\n");
 
-  const errorModel = createMockGeminiModel({}, true);
+  const errorModel = createErrorMockGeminiModel();
 
-  try {
-    await screenCandidates(testJob as any, testCandidates as any, { getModel: () => errorModel });
-    throw new Error("Should have thrown an error");
-  } catch (e: any) {
-    if (e.message.includes("Mock Gemini API error")) {
-      console.log("✅ Error handling works correctly\n");
-    } else {
-      throw e;
-    }
+  const results = await screenCandidates(testJob as any, testCandidates as any, { getModel: () => errorModel });
+
+  if (results && results.length === 0) {
+    console.log("✅ Error handling works correctly - returned empty results on failure\n");
+  } else {
+    throw new Error("Expected empty results on error, got: " + results.length);
   }
 }
 
@@ -71,11 +69,13 @@ async function testMultipleCandidates(): Promise<void> {
   console.log("Test 3: screenCandidates - Multiple candidates\n");
 
   // Return multiple results
-  const multipleResults = [
+  const multipleResults : ScreeningResult[] = [
     ...defaultMockScreeningResponse,
     {
+      jobId: "job_integration_test",
       candidateId: "c2",
       candidateName: "Bob Smith",
+      candidateEmail: "bob.smith@example.com",
       rank: 2,
       score: 70,
       skillScore: 30,
@@ -84,11 +84,12 @@ async function testMultipleCandidates(): Promise<void> {
       relevanceScore: 70,
       strengths: ["Motivated learner"],
       gaps: ["Limited experience"],
-      recommendation: "Consider",
-      confidence: 70,
+      recommendation: "Consider" as const,
+      confidence: 0.70,
       explanation: "Potential fit with mentoring",
-    },
-  ];
+      createdAt: new Date(),
+    } as ScreeningResult,
+  ] as ScreeningResult[];
 
   const mockModel = createMockGeminiModel(multipleResults);
   const results = await screenCandidates(testJob as any, testCandidates as any, { getModel: () => mockModel });
