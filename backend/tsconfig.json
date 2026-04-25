@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "rootDir": "./src",
+    "lib": ["es2022"],
+    "types": ["node"],
+    "rootDir": ".",
     "outDir": "./dist",
     "module": "commonjs",
     "target": "es2022",
@@ -9,8 +11,10 @@
     "isolatedModules": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "tools/**/*"],
   "exclude": ["node_modules", "dist"]
 }

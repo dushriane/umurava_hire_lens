@@ -1,4 +1,8 @@
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
+
+// We'll set up the interceptor differently since we can't use hooks here
+// This will be initialized in middleware or app layout
 
 // ------------------------------------------------------------
 // Base axios instance
@@ -25,10 +29,26 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// Response interceptor — normalize errors
+// Response interceptor — normalize errors and handle 401
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Handle token expiration (401 Unauthorized)
+    if (error.response?.status === 401) {
+      // Clear stored token
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('umurava_token')
+      }
+      
+      // Redirect to login page
+      if (typeof window !== 'undefined') {
+        // Avoid redirect loops by checking if we're already on login page
+        if (!window.location.pathname.includes('/login')) {
+          window.location.href = '/login?expired=true'
+        }
+      }
+    }
+
     const message =
       error.response?.data?.error ||
       error.response?.data?.message ||

@@ -1,14 +1,26 @@
 'use client'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { authApi } from '@/services/authApi'
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showExpiredMessage, setShowExpiredMessage] = useState(false)
+
+  useEffect(() => {
+    // Check if redirected due to token expiration
+    const expired = searchParams.get('expired')
+    if (expired === 'true') {
+      setShowExpiredMessage(true)
+      // Clear the query parameter
+      router.replace('/login')
+    }
+  }, [searchParams, router])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -43,6 +55,13 @@ export default function LoginPage() {
           <h1 style={styles.title}>Umurava</h1>
           <p style={styles.subtitle}>AI-Powered Talent Screening</p>
         </div>
+
+        {/* Token Expired Message */}
+        {showExpiredMessage && (
+          <div style={styles.expiredMessage}>
+            Your session has expired. Please log in again.
+          </div>
+        )}
 
         {/* Form */}
         <form onSubmit={handleLogin} style={styles.form}>
@@ -191,6 +210,15 @@ const styles = {
     background: 'var(--um-danger-bg)',
     borderRadius: '8px',
     border: '1px solid #FCA5A5',
+  },
+  expiredMessage: {
+    padding: '12px 14px',
+    marginBottom: '16px',
+    fontSize: '14px',
+    color: '#B45309',
+    background: '#FEF3C7',
+    borderRadius: '8px',
+    border: '1px solid #FDE68A',
   },
   demoBox: {
     padding: '16px',

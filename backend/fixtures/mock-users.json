@@ -2,21 +2,21 @@
   {
     "username": "recruiter",
     "email": "recruiter@example.com",
-    "password": "recruiter123",
+    "password": "$2a$10$QxMXnYUBZYmQILPvp/cxaOpF.WJegWkFKdLx1leNhvjCbWayYJbsK",
     "name": "Demo Recruiter",
     "role": "recruiter"
   },
   {
     "username": "admin",
     "email": "admin@example.com",
-    "password": "admin123",
+    "password": "$2a$10$cxhwI0seQVUpzP23GuZ2WOiJnQBNNrZ.JxA0w1gE93MNMnS8m/YW6",
     "name": "System Administrator",
     "role": "admin"
   },
   {
     "username": "hiring_manager",
     "email": "hiring.manager@example.com",
-    "password": "manager123",
+    "password": "$2a$10$tTIMWNcrx7p2zlmq0Nnqcurzh6vPZQQlhVE5LCsCv2p1x3/QyEamy",
     "name": "Hiring Manager",
     "role": "recruiter"
   }

@@ -4,8 +4,8 @@ import config from "../config";
 import logger from "../utils/logger";
 
 export interface TokenPayload {
-  id?: string;
-  username?: string;
+  username: string;
+  name: string;
   role?: string;
   iat?: number;
   exp?: number;
@@ -37,7 +37,7 @@ export function verifyJwt(req: Request, res: Response, next: NextFunction): void
   try {
     const payload = jwt.verify(token, config.auth.jwtSecret) as TokenPayload;
     req.user = payload;
-    logger.debug(`Valid JWT token for user: ${payload.username || payload.id}`);
+    logger.debug(`Valid JWT token for user: ${payload.username}`);
     next();
   } catch (e) {
     let message = "Invalid token";

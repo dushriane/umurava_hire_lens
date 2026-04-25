@@ -2,12 +2,13 @@ import { Request, Response } from "express";
 import * as fs from "fs/promises";
 import * as path from "path";
 import jwt from "jsonwebtoken";
+import bcryptjs from "bcryptjs";
 import config from "../../config";
 import logger from "../../utils/logger";
 
 interface User {
   username: string;
-  password: string; // TODO: use bcrypt hash in production
+  password: string; // bcrypt hash
   name: string;
   role?: string;
 }
@@ -49,8 +50,8 @@ export class AuthController {
         return;
       }
 
-      // Find user by username and password
-      const user = users.find((u) => u.username === username && u.password === password);
+      // Find user by username
+      const user = users.find((u) => u.username === username);
 
       if (!user) {
         logger.warn("Failed login attempt", { username, ip: req.ip });
@@ -58,8 +59,38 @@ export class AuthController {
         return;
       }
 
-      // Create JWT token
-      const payload: TokenPayload = { username: user.username, name: user.name, role: user.role };
+      // Verify password - support both bcrypt hashes and plaintext during migration
+      let passwordMatch = false;
+      
+      // Check if stored password is a bcrypt hash
+      const isBcryptHash = user.password.startsWith("$2a$") || 
+                          user.password.startsWith("$2b$") || 
+                          user.password.startsWith("$2y$");
+      
+      if (isBcryptHash) {
+        // Compare with bcrypt hash
+        passwordMatch = await bcryptjs.compare(password, user.password);
+      } else {
+        // Support plaintext during migration (will be hashed on next update)
+        // TODO: Remove this after migration to bcrypt
+        passwordMatch = password === user.password;
+        if (passwordMatch) {
+          logger.warn("User authenticated with plaintext password (migration needed)", { username });
+        }
+      }
+      
+      if (!passwordMatch) {
+        logger.warn("Failed login attempt - incorrect password", { username, ip: req.ip });
+        res.status(401).json({ error: "Invalid credentials" });
+        return;
+      }
+
+      // Create JWT token with standardized payload
+      const payload: TokenPayload = {
+        username: user.username,
+        name: user.name,
+        role: user.role
+      };
       const token = jwt.sign(payload, config.auth.jwtSecret, { expiresIn: "8h" });
 
       logger.info("User logged in successfully", { username, ip: req.ip });
