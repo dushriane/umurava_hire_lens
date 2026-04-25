@@ -2,28 +2,40 @@
   {
     "_id": "cand_manual_01",
     "name": "Alex Okonkwo",
+    "email": "alex.okonkwo@example.com",
+    "phone": "+234-123-456-7890",
     "skills": ["Node.js", "TypeScript", "PostgreSQL", "Docker", "REST APIs", "Jest"],
     "experienceYears": 6,
     "education": "BSc Computer Science",
+    "languages": ["English", "Yoruba"],
     "projects": ["Payments microservice migration", "Auth platform"],
-    "certifications": ["AWS Solutions Architect – Associate"]
+    "certifications": ["AWS Solutions Architect – Associate"],
+    "resumeUrl": "https://example.com/resumes/alex_okonkwo.pdf"
   },
   {
     "_id": "cand_manual_02",
     "name": "Sam Rivera",
-    "skills": ["Python", "Django", "MySQL", "GraphQL"],
+    "email": "sam.rivera@example.com",
+    "phone": "+1-555-123-4567",
+    "skills": ["Python", "Django", "MySQL", "GraphQL", "REST APIs"],
     "experienceYears": 3,
     "education": "Bootcamp + self-taught",
+    "languages": ["English", "Spanish"],
     "projects": ["E-commerce API"],
-    "certifications": []
+    "certifications": [],
+    "resumeUrl": "https://example.com/resumes/sam_rivera.pdf"
   },
   {
     "_id": "cand_manual_03",
     "name": "Jordan Lee",
+    "email": "jordan.lee@example.com",
+    "phone": "+65-6789-0123",
     "skills": ["Node.js", "PostgreSQL", "Docker", "Kubernetes", "Redis", "gRPC"],
     "experienceYears": 8,
     "education": "MEng Software Engineering",
+    "languages": ["English", "Mandarin"],
     "projects": ["High-traffic booking engine", "Event-driven inventory"],
-    "certifications": ["CKAD"]
+    "certifications": ["CKAD"],
+    "resumeUrl": "https://example.com/resumes/jordan_lee.pdf"
   }
 ]

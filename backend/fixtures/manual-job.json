@@ -1,9 +1,14 @@
 {
   "_id": "job_manual_001",
   "title": "Senior Backend Engineer",
+  "description": "We are seeking an experienced Senior Backend Engineer to lead the development of our scalable microservices architecture. You will work with modern technologies, mentor junior developers, and contribute to architectural decisions.",
+  "department": "Engineering",
+  "location": "Remote",
   "requiredSkills": ["Node.js", "PostgreSQL", "REST APIs", "Docker"],
   "niceToHave": ["Kubernetes", "Redis", "AWS"],
   "minExperienceYears": 4,
+  "experienceLevel": "senior",
   "educationLevel": "Bachelor's in CS or equivalent experience",
-  "shortlistSize": 5
+  "shortlistSize": 5,
+  "status": "open"
 }

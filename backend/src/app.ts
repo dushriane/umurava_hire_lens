@@ -26,7 +26,7 @@ const app = express();
 
 // Connect to database
 connectDB().catch((err) => {
-    logger.error("Failed to connect to database:", err);
+    logger.error("Failed to connect to database:", { error: err });
     process.exit(1);
 });
 
@@ -86,7 +86,7 @@ process.on("SIGINT", () => {
 
 // Handle unhandled rejections
 process.on("unhandledRejection", (err) => {
-  logger.error("Unhandled rejection:", err);
+  logger.error("Unhandled rejection:", { error: err });
   process.exit(1);
 });
 
