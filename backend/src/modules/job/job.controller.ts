@@ -12,7 +12,7 @@ export class JobController {
       logger.info("Creating job", { body: req.body });
 
       const job = await JobService.createJob(req.body);
-      res.status(201).json(job);
+      res.status(201).json({ data: job });
     } catch (error) {
       logger.error("Error creating job", { error });
       next(error);
@@ -67,7 +67,7 @@ export class JobController {
         return;
       }
 
-      res.status(200).json(job);
+      res.status(200).json({ data: job });
     } catch (error) {
       logger.error("Error fetching job", { jobId: req.params.id, error });
       next(error);
@@ -90,7 +90,7 @@ export class JobController {
         return;
       }
 
-      res.status(200).json(job);
+      res.status(200).json({ data: job });
     } catch (error) {
       logger.error("Error updating job", { jobId: req.params.id, error });
       next(error);
@@ -113,7 +113,7 @@ export class JobController {
         return;
       }
 
-      res.status(200).json({ message: "Job deleted successfully" });
+      res.status(200).json({ data: { message: "Job deleted successfully" } });
     } catch (error) {
       logger.error("Error deleting job", { jobId: req.params.id, error });
       next(error);

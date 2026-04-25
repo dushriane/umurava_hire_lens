@@ -2,7 +2,7 @@
 import { useEffect } from 'react'
 import Link from 'next/link'
 import { useAppDispatch, useAppSelector } from '@/store'
-import { fetchJobs, selectAllJobs, selectJobsStatus } from '@/store/jobsSlice'
+import { fetchJobs, selectAllJobs, selectJobsStatus, selectJobsError } from '@/store/jobsSlice'
 import { selectAllResults } from '@/store/screeningSlice'
 import Topbar from '@/components/Topbar'
 
@@ -16,10 +16,15 @@ export default function DashboardPage() {
   const dispatch   = useAppDispatch()
   const jobs       = useAppSelector(selectAllJobs)
   const jobsStatus = useAppSelector(selectJobsStatus)
+  const jobsError  = useAppSelector(selectJobsError)
   const results    = useAppSelector(selectAllResults)
 
   useEffect(() => {
-    if (jobsStatus === 'idle') dispatch(fetchJobs())
+    console.log('[Dashboard] useEffect: Checking jobs status', { jobsStatus })
+    if (jobsStatus === 'idle') {
+      console.log('[Dashboard] Dispatching fetchJobs')
+      dispatch(fetchJobs())
+    }
   }, [dispatch, jobsStatus])
 
   const activeJobs      = jobs.filter(j => j.status === 'active').length
@@ -28,6 +33,48 @@ export default function DashboardPage() {
   const avgScore        = screenedCount > 0
     ? Math.round(Object.values(results).reduce((s, r) => s + r.averageScore, 0) / screenedCount)
     : 0
+
+  // Show loading state
+  if (jobsStatus === 'loading') {
+    return (
+      <>
+        <Topbar title="Dashboard" subtitle="Loading..." />
+        <div className="um-content" style={{ textAlign: 'center', padding: '40px' }}>
+          <div className="um-ai-spinner" style={{ width: 40, height: 40, borderWidth: 2, margin: '0 auto 12px' }} />
+          <div style={{ color: 'var(--um-muted)', fontSize: 14 }}>Fetching your jobs...</div>
+        </div>
+      </>
+    )
+  }
+
+  // Show error state
+  if (jobsStatus === 'failed' && jobsError) {
+    console.error('[Dashboard] Jobs fetch failed:', jobsError)
+    return (
+      <>
+        <Topbar title="Dashboard" subtitle="Error loading jobs" />
+        <div className="um-content" style={{ padding: '40px' }}>
+          <div style={{
+            padding: '20px',
+            background: 'var(--um-danger-bg)',
+            border: '1px solid #FCA5A5',
+            borderRadius: '8px',
+            color: 'var(--um-danger)',
+          }}>
+            <div style={{ fontWeight: 600, marginBottom: '8px' }}>Error loading jobs</div>
+            <div style={{ fontSize: 13, marginBottom: '16px' }}>{jobsError}</div>
+            <button
+              className="um-btn um-btn-ghost"
+              onClick={() => dispatch(fetchJobs())}
+              style={{ padding: '8px 16px', fontSize: 13 }}
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </>
+    )
+  }
 
   return (
     <>
@@ -68,36 +115,36 @@ export default function DashboardPage() {
           </Link>
         </div>
 
-        {/* Loading */}
-        {jobsStatus === 'loading' && (
-          <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--um-muted)', fontSize: 13 }}>
-            <div className="um-ai-spinner" style={{ width: 32, height: 32, borderWidth: 2, margin: '0 auto 12px' }} />
-            Loading jobs...
-          </div>
-        )}
-
         {/* Jobs list */}
-        {jobsStatus === 'succeeded' && jobs.slice(0, 4).map((job) => (
-          <div
-            key={job.id}
-            className="um-card"
-            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12, cursor: 'pointer', transition: 'border-color 0.15s' }}
-            onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--um-primary)')}
-            onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--um-border)')}
-          >
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-                <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--um-text)' }}>{job.title}</div>
-                <StatusBadge status={job.status} />
-                {results[job.id] && (
-                  <span className="um-badge um-badge-primary" style={{ fontSize: 10 }}>Screened ✓</span>
-                )}
-              </div>
-              <div style={{ display: 'flex', gap: 14, fontSize: 12, color: 'var(--um-muted)', marginBottom: 10 }}>
-                <span>{job.location}</span>
-                <span>{job.type}</span>
-                <span>Posted {job.postedDate}</span>
-              </div>
+        {jobs.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--um-muted)', fontSize: 13 }}>
+            <div style={{ marginBottom: '12px' }}>No jobs created yet</div>
+            <Link href="/jobs/create">
+              <button className="um-btn um-btn-primary um-btn-sm">Create First Job</button>
+            </Link>
+          </div>
+        ) : (
+          jobs.slice(0, 4).map((job) => (
+            <div
+              key={job.id}
+              className="um-card"
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12, cursor: 'pointer', transition: 'border-color 0.15s' }}
+              onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--um-primary)')}
+              onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--um-border)')}
+            >
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--um-text)' }}>{job.title}</div>
+                  <StatusBadge status={job.status} />
+                  {results[job.id] && (
+                    <span className="um-badge um-badge-primary" style={{ fontSize: 10 }}>Screened ✓</span>
+                  )}
+                </div>
+                <div style={{ display: 'flex', gap: 14, fontSize: 12, color: 'var(--um-muted)', marginBottom: 10 }}>
+                  <span>{job.location}</span>
+                  <span>{job.type}</span>
+                  <span>Posted {job.postedDate}</span>
+                </div>
               <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                 {job.requiredSkills.slice(0, 4).map(s => (
                   <span key={s} className="um-tag">{s}</span>
@@ -119,7 +166,7 @@ export default function DashboardPage() {
               )}
             </div>
           </div>
-        ))}
+        )))}
 
         {/* Empty state */}
         {jobsStatus === 'succeeded' && jobs.length === 0 && (

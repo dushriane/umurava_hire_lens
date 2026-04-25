@@ -12,8 +12,14 @@ export const jobsApi = {
   // GET /api/jobs
   getAll: async (): Promise<Job[]> => {
     if (USE_MOCK) { await delay(); return MOCK_JOBS }
-    const { data } = await api.get('/jobs')
-    return data.data
+    try {
+      const { data } = await api.get('/jobs')
+      console.debug('[jobsApi] GET /jobs SUCCESS:', data)
+      return data.data
+    } catch (error) {
+      console.error('[jobsApi] GET /jobs FAILED:', error)
+      throw error
+    }
   },
 
   // GET /api/jobs/:id
@@ -24,8 +30,14 @@ export const jobsApi = {
       if (!job) throw new Error('Job not found')
       return job
     }
-    const { data } = await api.get(`/jobs/${id}`)
-    return data.data
+    try {
+      const { data } = await api.get(`/jobs/${id}`)
+      console.debug('[jobsApi] GET /jobs/:id SUCCESS:', data)
+      return data.data
+    } catch (error) {
+      console.error('[jobsApi] GET /jobs/:id FAILED:', error)
+      throw error
+    }
   },
 
   // POST /api/jobs
@@ -43,8 +55,14 @@ export const jobsApi = {
       }
       return newJob
     }
-    const { data } = await api.post('/jobs', payload)
-    return data.data
+    try {
+      const { data } = await api.post('/jobs', payload)
+      console.debug('[jobsApi] POST /jobs SUCCESS:', data)
+      return data.data
+    } catch (error) {
+      console.error('[jobsApi] POST /jobs FAILED:', error)
+      throw error
+    }
   },
 
   // PUT /api/jobs/:id
@@ -55,13 +73,25 @@ export const jobsApi = {
       if (!job) throw new Error('Job not found')
       return { ...job, ...payload, updatedAt: new Date().toISOString() }
     }
-    const { data } = await api.put(`/jobs/${id}`, payload)
-    return data.data
+    try {
+      const { data } = await api.put(`/jobs/${id}`, payload)
+      console.debug('[jobsApi] PUT /jobs/:id SUCCESS:', data)
+      return data.data
+    } catch (error) {
+      console.error('[jobsApi] PUT /jobs/:id FAILED:', error)
+      throw error
+    }
   },
 
   // DELETE /api/jobs/:id
   remove: async (id: string): Promise<void> => {
     if (USE_MOCK) { await delay(); return }
-    await api.delete(`/jobs/${id}`)
+    try {
+      const { data } = await api.delete(`/jobs/${id}`)
+      console.debug('[jobsApi] DELETE /jobs/:id SUCCESS:', data)
+    } catch (error) {
+      console.error('[jobsApi] DELETE /jobs/:id FAILED:', error)
+      throw error
+    }
   },
 }

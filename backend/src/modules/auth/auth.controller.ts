@@ -95,7 +95,12 @@ export class AuthController {
 
       logger.info("User logged in successfully", { username, ip: req.ip });
 
-      res.status(200).json({ token, user: payload });
+      res.status(200).json({
+        data: {
+          token,
+          user: payload
+        }
+      });
     } catch (error) {
       logger.error("Login error", { error });
       res.status(500).json({ error: "Login failed" });

@@ -22,13 +22,20 @@ export const screeningApi = {
         totalScreened: settings.applicantIds.length,
       }
     }
-    const apiKey = process.env.NEXT_PUBLIC_API_KEY
-    const { data } = await api.post(`/screening/${settings.jobId}/screen`, settings, {
-      headers: {
-        'X-API-Key': apiKey
-      }
-    })
-    return data.data
+    try {
+      const apiKey = process.env.NEXT_PUBLIC_API_KEY
+      console.debug('[screeningApi] POST /screening/:jobId/screen START:', { jobId: settings.jobId })
+      const { data } = await api.post(`/screening/${settings.jobId}/screen`, settings, {
+        headers: {
+          'X-API-Key': apiKey
+        }
+      })
+      console.debug('[screeningApi] POST /screening/:jobId/screen SUCCESS:', data)
+      return data.data
+    } catch (error) {
+      console.error('[screeningApi] POST /screening/:jobId/screen FAILED:', error)
+      throw error
+    }
   },
 
   // GET /api/screening/results/:jobId
@@ -40,14 +47,18 @@ export const screeningApi = {
       return null
     }
     try {
+      console.debug('[screeningApi] GET /screening/results/:jobId START:', { jobId })
       const { data } = await api.get(`/screening/results/${jobId}`, {
         headers: {
           'X-API-Key': process.env.NEXT_PUBLIC_API_KEY
         }
       })
+      console.debug('[screeningApi] GET /screening/results/:jobId SUCCESS:', data)
       return data.data
-    } catch {
+    } catch (error) {
+      console.error('[screeningApi] GET /screening/results/:jobId FAILED:', error)
       return null
     }
   },
-}
+    }
+  

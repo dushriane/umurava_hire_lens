@@ -38,10 +38,12 @@ export class ApplicantController {
       });
 
       res.status(201).json({
-        message: duplicate 
-          ? "Duplicate detected. Applicant merged successfully." 
-          : "Applicant created successfully.",
-        applicant,
+        data: {
+          message: duplicate 
+            ? "Duplicate detected. Applicant merged successfully." 
+            : "Applicant created successfully.",
+          applicant,
+        }
       });
     } catch (error) {
       logger.error("Error creating applicant", { error });
@@ -62,7 +64,7 @@ export class ApplicantController {
       logger.debug("Fetching applicants", { page, limit });
 
       const applicants = await ApplicantService.getAllApplicants(skip, limit);
-      res.status(200).json({ page, limit, applicants });
+      res.status(200).json({ data: applicants, pagination: { page, limit } });
     } catch (error) {
       logger.error("Error fetching applicants", { error });
       res.status(500).json({ error: "Failed to fetch applicants" });
@@ -89,7 +91,7 @@ export class ApplicantController {
       logger.debug("Fetching applicants by job", { jobId, page, limit });
 
       const applicants = await ApplicantService.getApplicantsByJob(jobId, skip, limit);
-      res.status(200).json({ page, limit, applicants });
+      res.status(200).json({ data: applicants, pagination: { page, limit } });
     } catch (error) {
       logger.error("Error fetching applicants by job", { error });
       res.status(500).json({ error: "Failed to fetch applicants" });
@@ -117,7 +119,7 @@ export class ApplicantController {
         return;
       }
 
-      res.status(200).json(applicant);
+      res.status(200).json({ data: applicant });
     } catch (error) {
       logger.error("Error fetching applicant", { error });
       res.status(500).json({ error: "Failed to fetch applicant" });

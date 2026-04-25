@@ -33,14 +33,23 @@ function isTokenExpired(token: string | null): boolean {
 
 export const authApi = {
   login: async (username: string, password: string): Promise<{ token: string; user: any }> => {
-    const { data } = await api.post('/auth/login', { username, password })
-    if (data?.token) {
-      localStorage.setItem('umurava_token', data.token)
+    try {
+      console.debug('[authApi] Attempting login:', { username })
+      const { data } = await api.post('/auth/login', { username, password })
+      console.debug('[authApi] Login SUCCESS:', data)
+      if (data?.data?.token) {
+        localStorage.setItem('umurava_token', data.data.token)
+        console.debug('[authApi] Token saved to localStorage')
+      }
+      return data.data
+    } catch (error) {
+      console.error('[authApi] Login FAILED:', error)
+      throw error
     }
-    return data
   },
 
   logout: () => {
+    console.debug('[authApi] Logout')
     localStorage.removeItem('umurava_token')
   },
 

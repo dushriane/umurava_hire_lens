@@ -32,10 +32,7 @@ export class ScreeningController {
         resultsCount: (result as any)?.screeningResults?.length || 0,
       });
 
-      res.status(200).json({
-        message: "Screening completed successfully",
-        data: result,
-      });
+      res.status(200).json({ data: result });
     } catch (error) {
       logger.error("Error triggering screening", {
         jobId: String(req.params.jobId),
@@ -79,7 +76,7 @@ export class ScreeningController {
         resultsCount: (result as any)?.screeningResults?.length || 0,
       });
 
-      res.status(200).json(result);
+      res.status(200).json({ data: result });
     } catch (error) {
       logger.error("Error fetching screening results", {
         jobId: String(req.params.jobId),

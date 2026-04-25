@@ -26,15 +26,36 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
+  console.debug('[axios] REQUEST:', {
+    method: config.method?.toUpperCase(),
+    url: config.url,
+    headers: config.headers,
+    data: config.data ? JSON.parse(typeof config.data === 'string' ? config.data : JSON.stringify(config.data)) : undefined,
+  })
   return config
 })
 
 // Response interceptor — normalize errors and handle 401
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.debug('[axios] RESPONSE SUCCESS:', {
+      status: response.status,
+      url: response.config.url,
+      data: response.data,
+    })
+    return response
+  },
   (error) => {
+    console.error('[axios] RESPONSE ERROR:', {
+      status: error.response?.status,
+      url: error.response?.config?.url,
+      data: error.response?.data,
+      message: error.message,
+    })
+    
     // Handle token expiration (401 Unauthorized)
     if (error.response?.status === 401) {
+      console.warn('[axios] 401 Unauthorized - clearing token and redirecting to login')
       // Clear stored token
       if (typeof window !== 'undefined') {
         localStorage.removeItem('umurava_token')
