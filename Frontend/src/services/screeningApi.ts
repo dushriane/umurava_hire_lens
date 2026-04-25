@@ -22,7 +22,12 @@ export const screeningApi = {
         totalScreened: settings.applicantIds.length,
       }
     }
-    const { data } = await api.post(`/screening/${settings.jobId}/screen`, settings)
+    const apiKey = process.env.NEXT_PUBLIC_API_KEY
+    const { data } = await api.post(`/screening/${settings.jobId}/screen`, settings, {
+      headers: {
+        'X-API-Key': apiKey
+      }
+    })
     return data.data
   },
 
@@ -35,7 +40,11 @@ export const screeningApi = {
       return null
     }
     try {
-      const { data } = await api.get(`/screening/results/${jobId}`)
+      const { data } = await api.get(`/screening/results/${jobId}`, {
+        headers: {
+          'X-API-Key': process.env.NEXT_PUBLIC_API_KEY
+        }
+      })
       return data.data
     } catch {
       return null
