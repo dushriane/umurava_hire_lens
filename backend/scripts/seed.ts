@@ -148,10 +148,20 @@ async function seed(): Promise<void> {
             lastName,
             email: candidateData.email.toLowerCase().trim(),
             phone: candidateData.phone,
-            skills: candidateData.skills,
+            skills: (candidateData.skills || []).map((s: string) => ({
+                name: s,
+                level: "Intermediate",
+                yearsOfExperience: 0,
+            })),
             experienceYears: candidateData.experienceYears ?? 0,
-            education: candidateData.education || "Not specified",
-            languages: candidateData.languages,
+            education: {
+                institution: candidateData.education || "Not specified",
+                degree: candidateData.education || "Not specified",
+            },
+            languages: (candidateData.languages || []).map((lang: string) => ({
+                name: lang,
+                proficiency: "Fluent",
+            })),
             screeningStatus: "pending",
             appliedAt: new Date(),
         });
