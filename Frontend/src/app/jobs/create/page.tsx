@@ -12,7 +12,7 @@ const EMPTY_FORM: CreateJobPayload = {
   department: '',
   type: 'Full-time',
   location: '',
-  experienceLevel: 'Mid-level (2–5 years)',
+  experienceLevel: 'mid',
   salaryRange: '',
   description: '',
   requiredSkills: [],
@@ -173,9 +173,10 @@ export default function CreateJobPage() {
             <div className="um-form-group">
               <label className="um-label">Experience Level</label>
               <select name="experienceLevel" className="um-input" value={form.experienceLevel} onChange={handleChange}>
-                {(['Junior (0–2 years)', 'Mid-level (2–5 years)', 'Senior (5+ years)', 'Lead / Principal'] as ExperienceLevel[]).map(l => (
-                  <option key={l}>{l}</option>
-                ))}
+                <option value="junior">Junior (0–2 years)</option>
+                <option value="mid">Mid-level (2–5 years)</option>
+                <option value="senior">Senior (5+ years)</option>
+                <option value="lead">Lead / Principal</option>
               </select>
             </div>
 

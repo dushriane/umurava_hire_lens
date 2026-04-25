@@ -9,7 +9,7 @@
 
 export type JobStatus = 'active' | 'screening' | 'closed' | 'draft'
 export type JobType   = 'Full-time' | 'Part-time' | 'Contract' | 'Internship'
-export type ExperienceLevel = 'Junior (0–2 years)' | 'Mid-level (2–5 years)' | 'Senior (5+ years)' | 'Lead / Principal'
+export type ExperienceLevel = 'junior' | 'mid' | 'senior' | 'lead'
 export type ApplicantSource = 'umurava' | 'external'
 export type ScreeningStatus = 'idle' | 'loading' | 'succeeded' | 'failed'
 

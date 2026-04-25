@@ -1,6 +1,5 @@
 'use client'
 import Link from 'next/link'
-import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
 const navItems = [
@@ -48,7 +47,7 @@ export default function Sidebar() {
     <aside className="um-sidebar">
       <div className="um-sidebar-logo">
         <div style={{ width: 36, height: 36, background: 'white', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, padding: 4 }}>
-          <Image src="/umurava-logo.png" alt="Umurava" width={28} height={28} style={{ objectFit: 'contain' }} />
+          <img src="/umurava-logo.png" alt="Umurava" width={28} height={28} style={{ objectFit: 'contain' }} />
         </div>
         <div>
           <div className="um-logo-text">Umurava</div>

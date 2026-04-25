@@ -171,7 +171,7 @@ export default function ScreenPage() {
             </div>
             {job && (
               <div style={{ marginTop: 18 }}>
-                <span className="um-badge um-badge-primary">{job.experienceLevel}</span>
+                <span className="um-badge um-badge-primary" style={{ textTransform: 'capitalize' }}>{job.experienceLevel}</span>
                 {' '}
                 <span className="um-badge um-badge-info">{job.location}</span>
               </div>

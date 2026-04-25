@@ -1,8 +1,8 @@
-// File: C:\Users\hp\Documents\progr\umurava_hackathon\umurava_hire_lens\Frontend\src\app\login\page.tsx
-import * as entry from '../../../../src/app/login/page.js'
+// File: C:\Users\hp\Documents\progr\umurava_hackathon\umurava_hire_lens\Frontend\src\app\jobs\create\page.tsx
+import * as entry from '../../../../../src/app/jobs/create/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
-type TEntry = typeof import('../../../../src/app/login/page.js')
+type TEntry = typeof import('../../../../../src/app/jobs/create/page.js')
 
 // Check that the entry is a valid entry
 checkFields<Diff<{

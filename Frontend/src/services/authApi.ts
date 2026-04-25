@@ -39,7 +39,8 @@ export const authApi = {
       console.debug('[authApi] Login SUCCESS:', data)
       if (data?.data?.token) {
         localStorage.setItem('umurava_token', data.data.token)
-        console.debug('[authApi] Token saved to localStorage')
+        document.cookie = `umurava_token=${data.data.token}; path=/; max-age=86400; SameSite=Lax`;
+        console.debug('[authApi] Token saved to localStorage and cookies')
       }
       return data.data
     } catch (error) {
@@ -51,6 +52,7 @@ export const authApi = {
   logout: () => {
     console.debug('[authApi] Logout')
     localStorage.removeItem('umurava_token')
+    document.cookie = 'umurava_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
   },
 
   getToken: () => localStorage.getItem('umurava_token'),

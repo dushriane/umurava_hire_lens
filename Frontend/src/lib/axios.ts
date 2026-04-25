@@ -59,6 +59,7 @@ api.interceptors.response.use(
       // Clear stored token
       if (typeof window !== 'undefined') {
         localStorage.removeItem('umurava_token')
+        document.cookie = 'umurava_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
       }
       
       // Redirect to login page

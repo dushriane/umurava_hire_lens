@@ -27,8 +27,8 @@ export default function DashboardPage() {
     }
   }, [dispatch, jobsStatus])
 
-  const activeJobs      = jobs.filter(j => j.status === 'active').length
-  const totalApplicants = jobs.reduce((sum, j) => sum + j.applicantCount, 0)
+  const activeJobs      = jobs.filter(j => j.status === 'active' || j.status === ('open' as any)).length
+  const totalApplicants = jobs.reduce((sum, j) => sum + (j.applicantCount || 0), 0)
   const screenedCount   = Object.keys(results).length
   const avgScore        = screenedCount > 0
     ? Math.round(Object.values(results).reduce((s, r) => s + r.averageScore, 0) / screenedCount)
@@ -126,7 +126,7 @@ export default function DashboardPage() {
         ) : (
           jobs.slice(0, 4).map((job) => (
             <div
-              key={job.id}
+              key={job.id || (job as any)._id}
               className="um-card"
               style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12, cursor: 'pointer', transition: 'border-color 0.15s' }}
               onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--um-primary)')}
@@ -136,7 +136,7 @@ export default function DashboardPage() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
                   <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--um-text)' }}>{job.title}</div>
                   <StatusBadge status={job.status} />
-                  {results[job.id] && (
+                  {results[job.id || (job as any)._id] && (
                     <span className="um-badge um-badge-primary" style={{ fontSize: 10 }}>Screened ✓</span>
                   )}
                 </div>
@@ -146,22 +146,22 @@ export default function DashboardPage() {
                   <span>Posted {job.postedDate}</span>
                 </div>
               <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                {job.requiredSkills.slice(0, 4).map(s => (
+                {(job.requiredSkills || []).slice(0, 4).map(s => (
                   <span key={s} className="um-tag">{s}</span>
                 ))}
-                {job.requiredSkills.length > 4 && (
-                  <span className="um-tag">+{job.requiredSkills.length - 4}</span>
+                {(job.requiredSkills || []).length > 4 && (
+                  <span className="um-tag">+{(job.requiredSkills || []).length - 4}</span>
                 )}
               </div>
             </div>
             <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 20 }}>
               <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--um-primary)' }}>
-                {job.applicantCount}
+                {job.applicantCount || 0}
               </div>
               <div style={{ fontSize: 11, color: 'var(--um-muted)' }}>applicants</div>
-              {results[job.id] && (
+              {results[job.id || (job as any)._id] && (
                 <div style={{ fontSize: 12, color: 'var(--um-success)', fontWeight: 600, marginTop: 4 }}>
-                  Top: {results[job.id].topScore}
+                  Top: {results[job.id || (job as any)._id].topScore}
                 </div>
               )}
             </div>
